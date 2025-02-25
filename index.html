@@ -1,161 +1,162 @@
-Feature: Deposit Account Recent Transactions
-
-  Scenario: Deposit account recent transactions success for retail deposit account
-    Given I am a small business retail deposit account holder
-    When I check my recent transactions
-    Then I am able to see my posted transactions
-
-    Feature: Money Market Account Transactions
-
-    Scenario: Deposit account recent transactions success for money market account
-      Given I am a money market account holder
-      When I view my recent transactions
-      Then I am able to see my money market transactions
-
-      
-      Feature: Deposit account recent transactions
-
-  Scenario: Deposit account recent transactions success for profile deposit account
-    Given I am a small business profile deposit account holder
-    When I navigate to recent transactions page
-    Then I should see my posted transactions displayed
-
-stepdefinition 1
-
+<!-- first code -->
 
 package StepDefinitions;
 
 import io.cucumber.java.en.*;
+import static org.junit.Assert.*;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.junit.Assert;
+import io.restassured.specification.RequestSpecification;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DepositTransactionsSteps {
 
+    private String accountType;
+    private String baseUrl;
     private Response response;
-    private final String BASE_URL = "https://yourbankapi.com";
-    private final String accountId = "12345"; // Sample retail deposit account ID
+    private List<Map<String, Object>> recentTransactions;
 
     @Given("I am a small business retail deposit account holder")
     public void i_am_a_small_business_retail_deposit_account_holder() {
-        // In a real test, you might fetch user data from a database or mock it
-        System.out.println("User is a small business retail deposit account holder with ID: " + accountId);
+        accountType = "Retail Deposit Account";
+        String environment = "local"; // Example: Change as needed (local, dev, QA)
+        String accountId = "123456"; // Example account ID
+        baseUrl = "https://" + environment + ".bankingapi.com/accounts/" + accountId + "/transactions";
+
+        System.out.println("Account Type: " + accountType);
+        System.out.println("Constructed URL: " + baseUrl);
+
+        assertNotNull("Account Type should not be null", accountType);
+        assertNotNull("Base URL should not be null", baseUrl);
     }
 
     @When("I check my recent transactions")
     public void i_check_my_recent_transactions() {
-        response = RestAssured
-                .given()
-                .header("Authorization", "Bearer yourAuthTokenHere") // Replace with a valid token
-                .when()
-                .get(BASE_URL + "/api/v1/accounts/" + accountId + "/transactions");
+        RequestSpecification request = RestAssured.given();
+
+        // Setting generic headers
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer sample-token");
+        headers.put("Client-Correlation-ID", "xyz-123");
+        headers.put("Accept", "application/json");
+
+        request.headers(headers);
+
+        // Making the GET request
+        response = request.get(baseUrl);
+        assertNotNull("Response should not be null", response);
+
+        // Extracting transactions from response
+        recentTransactions = response.jsonPath().getList("transactions");
+        System.out.println("Retrieved Transactions: " + recentTransactions);
     }
 
     @Then("I am able to see my posted transactions")
     public void i_am_able_to_see_my_posted_transactions() {
-        // Verify response status code
-        Assert.assertEquals(200, response.getStatusCode());
+        assertEquals("Expected HTTP 200 OK", 200, response.getStatusCode());
+        assertNotNull("Transactions should not be null", recentTransactions);
+        assertFalse("Transactions should not be empty", recentTransactions.isEmpty());
 
-        // Verify transactions are posted
-        boolean allPosted = response.jsonPath().getList("transactions.status").stream()
-                .allMatch(status -> status.equals("Posted"));
-
-        Assert.assertTrue("All transactions should be posted", allPosted);
-
-        System.out.println("Test Passed: User can see posted transactions.");
+        System.out.println("Successfully retrieved transactions: " + recentTransactions);
     }
 }
 
 
-stepdefinition 2
+<!-- fourth test case -->
+
+SavingsAccountTransactions.feature
+
+Feature: Savings Account Recent Transactions
+
+  Scenario: Recent transactions success for profile savings account
+    Given I am a small business profile savings account holder
+    When I review my recent transactions for savings account
+    Then I should see my posted transactions for savings account
 
 
-package StepDefinitions;
+    <!-- step -->
+
+    <!-- SavingsAccountTransactionsSteps -->
+
+
+    package StepDefinitions;
 
 import io.cucumber.java.en.*;
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import java.util.List;
-import java.util.Arrays;
 
-public class MoneyMarketAccountSteps {
+public class SavingsAccountTransactionsSteps {
 
-    private boolean isMoneyMarketAccountHolder;
+    private String accountType;
     private List<String> recentTransactions;
 
-    @Given("I am a money market account holder")
-    public void iAmAMoneyMarketAccountHolder() {
-        isMoneyMarketAccountHolder = true;  // Assume user is a money market account holder
+    @Given("I am a small business profile savings account holder")
+    public void i_am_a_small_business_profile_savings_account_holder() {
+        accountType = "Profile Savings Account";
+        System.out.println("Account Type: " + accountType);
     }
 
-    @When("I view my recent transactions")
-    public void I_view_my_recent_transactions() {
-        if (isMoneyMarketAccountHolder) {
-            // Mocking transactions; In real cases, fetch from DB or API
-            recentTransactions = Arrays.asList("Deposit $1000", "Withdrawal $500", "Interest $20");
-        }
+    @When("I review my recent transactions for savings account")
+    public void i_review_my_recent_transactions_for_savings_account() {
+        // Simulating transaction retrieval for savings account
+        recentTransactions = List.of("Deposit - $500", "Withdrawal - $100", "Interest - $10");
+        System.out.println("Retrieved Transactions for Savings Account: " + recentTransactions);
     }
 
-    @Then("I am able to see my money market transactions")
-    public void i_am_able_to_see_my_money_market_transactions() {
-        Assert.assertNotNull("Transactions should not be null", recentTransactions);
-        Assert.assertFalse("Transactions list should not be empty", recentTransactions.isEmpty());
-
-        System.out.println("Recent Transactions: " + recentTransactions);
+    @Then("I should see my posted transactions for savings account")
+    public void i_should_see_my_posted_transactions_for_savings_account() {
+        assertNotNull("Transactions should not be null", recentTransactions);
+        assertFalse("Transactions should not be empty", recentTransactions.isEmpty());
+        System.out.println("Successfully retrieved transactions: " + recentTransactions);
     }
 }
 
-stepdefinition 3
+<!-- fifth test case -->
 
-package StepDefinitions;
+RetailCDAccountTransactions.feature
 
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import org.junit.jupiter.api.Assertions;
+Feature: Retail CD account recent transactions
+
+  Scenario: Deposit account recent transactions success for retail CD account
+    Given I am a small business retail CD account holder
+    When I request my recent transactions for the CD account
+    Then I should receive a list of posted transactions for the CD account
+
+    <!-- step -->
+    RetailCDAccountTransactionsSteps
+
+
+    package StepDefinitions;
+
+import io.cucumber.java.en.*;
+import static org.junit.Assert.*;
 import java.util.List;
 
-public class RecentTransactionsSteps {
+public class RetailCDAccountTransactionsSteps {
 
+    private String accountType;
     private List<String> recentTransactions;
-    private boolean transactionsVisible = false;
 
-    @Given("I am a small business profile deposit account holder")
-    public void iAmASmallBusinessProfileDepositAccountHolder() {
-        System.out.println("User is identified as a small business profile deposit account holder.");
+    @Given("I am a small business retail CD account holder")
+    public void i_am_a_small_business_retail_cd_account_holder() {
+        accountType = "Retail CD Account";
+        System.out.println("Account Type: " + accountType);
     }
 
-    @When("I navigate to recent transactions page")
-    public void iNavigateToRecentTransactionsPage() {
-        // Simulating navigation to recent transactions page
-        recentTransactions = List.of("Transaction 1", "Transaction 2", "Transaction 3");
-        transactionsVisible = true;
-        System.out.println("Navigated to the recent transactions page.");
+    @When("I request my recent transactions for the CD account")
+    public void i_request_my_recent_transactions_for_the_cd_account() {
+        // Simulating transaction retrieval for retail CD account
+        recentTransactions = List.of("Interest - $50", "Deposit - $1000", "Maturity - $2000");
+        System.out.println("Retrieved Transactions for Retail CD Account: " + recentTransactions);
     }
 
-    @Then("I should see my posted transactions displayed")
-    public void iShouldSeeMyPostedTransactionsDisplayed() {
-        Assertions.assertTrue(transactionsVisible, "Transactions should be visible on the recent transactions page.");
-        Assertions.assertNotNull(recentTransactions, "Transaction list should not be null.");
-        Assertions.assertFalse(recentTransactions.isEmpty(), "Transaction list should not be empty.");
-        System.out.println("Posted transactions are correctly displayed.");
+    @Then("I should receive a list of posted transactions for the CD account")
+    public void i_should_receive_a_list_of_posted_transactions_for_the_cd_account() {
+        assertNotNull("Transactions should not be null", recentTransactions);
+        assertFalse("Transactions should not be empty", recentTransactions.isEmpty());
+        System.out.println("Successfully retrieved transactions: " + recentTransactions);
     }
-}
-
-
-runner 
-
-package runners;
-
-import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
-import org.junit.runner.RunWith;
-
-@RunWith(Cucumber.class)
-@CucumberOptions(
-        features = "src/test/java/features",
-        glue = "stepDefinitions",
-        plugin = {"pretty", "html:target/cucumber-reports.html"},
-        monochrome = true
-)
-public class TestRunner {
 }
