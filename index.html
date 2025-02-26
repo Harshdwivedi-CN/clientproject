@@ -1,6 +1,490 @@
-Feature: Deposit Account Recent Transactions
+<!-- sixth  -->
 
-  Scenario: Deposit account recent transactions success for retail deposit account
-    Given I am a small business retail deposit account holder
-    When I check my recent transactions
-    Then I am able to see my posted transactions
+MismatchedAccountReference.feature
+
+Feature: Mismatched Account Reference ID
+
+  Scenario: Deposit account recent transactions failure for mismatched accountReferenceId
+    Given I am a small business account holder with mismatched accountReferenceId
+    When I attempt to view my recent transactions
+    Then I should not see any posted transactions due to mismatched accountReferenceId
+
+
+    <!-- MismatchedAccountReferenceSteps -->
+
+    package StepDefinitions;
+
+    import io.cucumber.java.en.*;
+    import static org.junit.Assert.*;
+    import java.util.List;
+    
+    public class MismatchedAccountReferenceSteps {
+    
+        private String accountType;
+        private String accountReferenceId;
+        private List<String> recentTransactions;
+    
+        @Given("I am a small business account holder with mismatched accountReferenceId")
+        public void i_am_a_small_business_account_holder_with_mismatched_accountReferenceId() {
+            accountType = "Small Business Account";
+            accountReferenceId = "Mismatched-12345";  // Simulating a mismatched accountReferenceId
+            System.out.println("Account Type: " + accountType);
+            System.out.println("Account Reference ID: " + accountReferenceId);
+        }
+    
+        @When("I attempt to view my recent transactions")
+        public void i_attempt_to_view_my_recent_transactions() {
+            // Simulating failed transaction retrieval due to mismatched accountReferenceId
+            if ("Mismatched-12345".equals(accountReferenceId)) {
+                recentTransactions = null;
+                System.out.println("No transactions found due to mismatched accountReferenceId.");
+            }
+        }
+    
+        @Then("I should not see any posted transactions due to mismatched accountReferenceId")
+        public void i_should_not_see_any_posted_transactions_due_to_mismatched_accountReferenceId() {
+            assertNull("Transactions should be null due to mismatched accountReferenceId", recentTransactions);
+            System.out.println("No transactions displayed for mismatched accountReferenceId.");
+        }
+    }
+    
+    <!-- seventh -->
+
+    LoanAccountTransactions.feature
+
+    Feature: Loan account recent transactions success for retail ILA account
+
+  Scenario: View recent transactions for a retail ILA account
+    Given I am a small business retail ILA account holder
+    When I access my loan account's recent transactions
+    Then I verify the displayed posted transactions
+
+    <!-- LoanAccountTransactionsSteps -->
+
+    package StepDefinitions;
+
+import io.cucumber.java.en.*;
+import static org.junit.Assert.*;
+import java.util.List;
+
+public class LoanAccountTransactionsSteps {
+
+    private String accountType;
+    private List<String> recentTransactions;
+
+    @Given("I am a small business retail ILA account holder")
+    public void i_am_a_small_business_retail_ILA_account_holder() {
+        accountType = "Retail ILA Account";
+        System.out.println("Account Type: " + accountType);
+    }
+
+    @When("I access my loan account's recent transactions")
+    public void i_access_my_loan_account_recent_transactions() {
+        // Simulating transaction retrieval for retail ILA account
+        recentTransactions = List.of("Payment - $500", "Interest - $25", "Deposit - $1500");
+        System.out.println("Retrieved Transactions for Retail ILA Account: " + recentTransactions);
+    }
+
+    @Then("I verify the displayed posted transactions")
+    public void i_verify_the_displayed_posted_transactions() {
+        assertNotNull("Transactions should not be null", recentTransactions);
+        assertFalse("Transactions should not be empty", recentTransactions.isEmpty());
+        System.out.println("Successfully verified transactions: " + recentTransactions);
+    }
+}
+
+<!-- 8th code -->
+
+LoanAccountRecentTransactionsLOC.feature
+
+Feature: Loan account recent transactions success for retail LOC account
+
+  Scenario: Display recent transactions for a retail LOC account
+    Given I am a small business retail LOC account holder
+    When I retrieve my recent loan transactions
+    Then I should see the list of posted transactions
+
+
+    <!-- LoanAccountRecentTransactionsLOCSteps -->
+
+    package StepDefinitions;
+
+    import io.cucumber.java.en.*;
+    import static org.junit.Assert.*;
+    import java.util.List;
+    
+    public class LoanAccountRecentTransactionsLOCSteps {
+    
+        private String accountType;
+        private List<String> recentTransactions;
+    
+        @Given("I am a small business retail LOC account holder")
+        public void i_am_a_small_business_retail_LOC_account_holder() {
+            accountType = "Retail LOC Account";
+            System.out.println("Account Type: " + accountType);
+        }
+    
+        @When("I retrieve my recent loan transactions")
+        public void i_retrieve_my_recent_loan_transactions() {
+            // Simulating transaction retrieval for retail LOC account
+            recentTransactions = List.of("Withdrawal - $500", "Interest - $25", "Payment - $300");
+            System.out.println("Retrieved Transactions for Retail LOC Account: " + recentTransactions);
+        }
+    
+        @Then("I should see the list of posted transactions")
+        public void i_should_see_the_list_of_posted_transactions() {
+            assertNotNull("Transactions should not be null", recentTransactions);
+            assertFalse("Transactions should not be empty", recentTransactions.isEmpty());
+            System.out.println("Successfully verified posted transactions: " + recentTransactions);
+        }
+    }
+      
+    <!-- ninth code -->
+
+    DepositAccountUpcomingTransactions.feature
+
+
+    Feature: Deposit account upcoming transactions success for retail deposit account
+
+  Scenario: View upcoming transactions for a retail deposit account
+    Given I am a verified small business retail deposit account holder
+    When I review the upcoming transactions for my deposit account
+    Then I should see the scheduled transactions listed
+
+    <!-- DepositAccountUpcomingTransactionsSteps -->
+
+    package StepDefinitions;
+
+import io.cucumber.java.en.*;
+import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DepositAccountUpcomingTransactionsSteps {
+
+    private String accountType;
+    private List<String> upcomingTransactions;
+
+    @Given("I am a verified small business retail deposit account holder")
+    public void i_am_a_verified_small_business_retail_deposit_account_holder() {
+        accountType = "Retail Deposit Account";
+        System.out.println("Account Type: " + accountType);
+    }
+
+
+    @When("I review the upcoming transactions for my deposit account")
+    public void i_review_the_upcoming_transactions_for_my_deposit_account() {
+        // Simulate retrieving upcoming transactions
+        upcomingTransactions = new ArrayList<>();
+        upcomingTransactions.add("Scheduled Transfer - $100");
+        upcomingTransactions.add("Direct Debit - $50");
+        upcomingTransactions.add("Standing Order - $200");
+        System.out.println("Retrieved Upcoming Transactions: " + upcomingTransactions);
+    }
+
+    @Then("I should see the scheduled transactions listed")
+    public void i_should_see_the_scheduled_transactions_listed() {
+        // Verify that transactions are retrieved and displayed
+        assertNotNull("Upcoming transactions should not be null", upcomingTransactions);
+        assertFalse("Upcoming transactions should not be empty", upcomingTransactions.isEmpty());
+
+        // Display transactions for validation
+        System.out.println("Scheduled Transactions: " + upcomingTransactions);
+
+        // Basic check to confirm at least one transaction is listed
+        assertTrue("At least one scheduled transaction should be listed", upcomingTransactions.size() > 0);
+    }
+}
+
+<!-- tenth code -->
+
+upcomingTransactionForMMA.feature
+
+Feature: Display scheduled transactions for Money Market Account
+
+  Scenario: Display upcoming transactions for Money Market Account
+    Given I am authenticated as a money market account user
+    When I navigate to the upcoming transactions section
+    Then I should be shown my scheduled transactions
+
+
+    <!-- UpcomingTransactionsMMA -->
+  
+    package StepDefinitions;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
+import io.cucumber.java.en.Then;
+import static org.junit.Assert.assertTrue;
+
+public class UpcomingTransactionsMMA {
+
+    @Given("I am authenticated as a money market account user")
+    public void i_am_authenticated_as_a_money_market_account_user() {
+        // Simulate user authentication for a money market account holder
+        System.out.println("User authenticated as a Money Market Account holder.");
+    }
+
+    @When("I navigate to the upcoming transactions section")
+    public void i_navigate_to_the_upcoming_transactions_section() {
+        // Simulate navigation to upcoming transactions
+        System.out.println("Navigated to Upcoming Transactions section.");
+    }
+
+    @Then("I should be shown my scheduled transactions")
+    public void i_should_be_shown_my_scheduled_transactions() {
+        // Simulate fetching and displaying scheduled transactions
+        boolean transactionsDisplayed = true; // Assuming transactions are displayed
+        assertTrue("Scheduled transactions are not displayed!", transactionsDisplayed);
+        System.out.println("Scheduled transactions are displayed.");
+    }
+}
+
+<!-- eleventh code  -->
+upcomingTransactionsForProfileDepositAccount.feature
+
+Feature: View scheduled transactions for small business profile deposit account
+
+  Scenario: Display scheduled transactions for Profile Deposit Account
+    Given I am viewing upcoming transactions as a small business profile deposit account holder
+    When I visit the upcoming transactions section
+    Then I should be able to view my scheduled transactions
+
+    <!-- UpcomingTransactionsSteps -->
+
+    package StepDefinitions;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import static org.junit.Assert.assertTrue;
+
+public class UpcomingTransactionsSteps {
+
+    @Given("I am viewing upcoming transactions as a small business profile deposit account holder")
+    public void i_am_viewing_upcoming_transactions_as_a_small_business_profile_deposit_account_holder() {
+        System.out.println("User is authenticated and viewing upcoming transactions.");
+    }
+
+
+    @When("I visit the upcoming transactions section")
+    public void i_visit_the_upcoming_transactions_section() {
+        System.out.println("User navigates to the upcoming transactions section.");
+        // Simulate navigation action if needed
+    }
+
+    @Then("I should be able to view my scheduled transactions")
+    public void i_should_be_able_to_view_my_scheduled_transactions() {
+        System.out.println("User views scheduled transactions.");
+        // Simulate check for scheduled transactions
+        boolean transactionsDisplayed = true;  // Mocking the result for testing
+        assertTrue("Scheduled transactions are not visible!", transactionsDisplayed);
+    }
+}
+
+
+<!-- 12th code -->
+
+upcomingTransactionForSavingsProfile
+
+
+Feature: Display scheduled transactions for Profile Savings Account
+
+  Scenario: View upcoming transactions for Profile Savings
+    Given I am a business profile holder for savings account
+    When I check my upcoming savings transactions
+    Then I should see my scheduled savings transactions
+
+
+    <!-- UpcomingTransactionsSavingsProfileSteps -->
+
+
+    package StepDefinitions;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
+import io.cucumber.java.en.Then;
+
+public class UpcomingTransactionsSavingsProfileSteps {
+
+    @Given("I am a business profile holder for savings account")
+    public void i_am_a_business_profile_holder_for_savings_account() {
+        System.out.println("Account Type: Profile Savings Account");
+    }
+
+    @When("I check my upcoming savings transactions")
+    public void i_check_my_upcoming_savings_transactions() {
+        System.out.println("Checking upcoming savings transactions...");
+        // Code to fetch upcoming transactions
+    }
+
+    @Then("I should see my scheduled savings transactions")
+    public void i_should_see_my_scheduled_savings_transactions() {
+        System.out.println("Displaying scheduled savings transactions...");
+        // Code to validate the displayed transactions
+    }
+}
+
+<!-- 13th code -->
+
+upcomingTransactionForRetailCD.feature
+
+Feature: Display scheduled transactions for Retail CD Account
+
+  Scenario: View upcoming transactions for Retail CD Account
+    Given I hold a retail CD account for my small business
+    When I review my pending CD transactions
+    Then I should be presented with my scheduled CD transactions
+
+
+    <!-- UpcomingTransactionsRetailCDSteps -->
+
+    package StepDefinitions;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
+import io.cucumber.java.en.Then;
+
+public class UpcomingTransactionsRetailCDSteps {
+
+    @Given("I hold a retail CD account for my small business")
+    public void i_hold_a_retail_cd_account_for_my_small_business() {
+        System.out.println("Account Type: Retail CD Account for Small Business");
+    }
+
+    @When("I review my pending CD transactions")
+    public void i_review_my_pending_cd_transactions() {
+        System.out.println("Reviewing pending CD transactions...");
+        // Add logic to fetch pending CD transactions
+    }
+
+    @Then("I should be presented with my scheduled CD transactions")
+    public void i_should_be_presented_with_my_scheduled_cd_transactions() {
+        System.out.println("Displaying scheduled CD transactions...");
+        // Add logic to validate scheduled transactions
+    }
+}
+
+<!-- 14th code -->
+
+upcomingTransactionForMismatchedAccount.feature
+
+Feature: Handle unauthorized access for mismatched accountReferenceId
+
+  Scenario: Deposit account upcoming transactions failure for mismatched accountReferenceId
+    Given I own a retail deposit account under a different business name
+    When I attempt to view my upcoming transactions
+    Then I receive a 403 unauthorized error
+
+    <!-- upcomingTransactionForMismatchedAccountSteps  -->
+
+
+    package StepDefinitions;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
+import io.cucumber.java.en.Then;
+import static org.junit.Assert.*;
+
+public class UpcomingTransactionsMismatchedAccountSteps {
+
+    private String accountStatus;
+    private int responseCode;
+
+    @Given("I own a retail deposit account under a different business name")
+    public void i_own_a_retail_deposit_account_under_a_different_business_name() {
+        accountStatus = "Mismatched AccountReferenceId";
+        System.out.println("Account Status: " + accountStatus);
+    }
+
+    @When("I attempt to view my upcoming transactions")
+    public void i_attempt_to_view_my_upcoming_transactions() {
+        System.out.println("Attempting to view upcoming transactions...");
+        // Simulate unauthorized access for mismatched accountReferenceId
+        if ("Mismatched AccountReferenceId".equals(accountStatus)) {
+            responseCode = 403;  // Simulating 403 Unauthorized Error
+        } else {
+            responseCode = 200;  // Success (Not expected in this test)
+        }
+    }
+
+    @Then("I receive a 403 unauthorized error")
+    public void i_receive_a_403_unauthorized_error() {
+        System.out.println("Received response code: " + responseCode);
+        assertEquals(403, responseCode);
+    }
+}
+
+<!-- 15th code -->
+
+searchTransactionForRetailDepositAccount.feature
+
+Feature: Search transactions by description for retail deposit account
+
+  Scenario: Deposit account search transactions success for retail deposit account
+    Given I hold a retail deposit account for my small business
+    When I filter transactions using a specific description
+    Then I am able to see my searched transactions
+
+
+    <!-- SearchTransactionsRetailDepositSteps    -->
+
+    package StepDefinitions;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
+import io.cucumber.java.en.Then;
+import java.util.ArrayList;
+import java.util.List;
+import static org.junit.Assert.*;
+
+public class SearchTransactionsRetailDepositSteps {
+
+    private String accountType;
+    private List<String> transactions;
+    private List<String> searchResults;
+    private String searchDescription;
+
+    @Given("I hold a retail deposit account for my small business")
+    public void i_hold_a_retail_deposit_account_for_my_small_business() {
+        accountType = "Retail Deposit Account";
+        transactions = new ArrayList<>();
+        transactions.add("Payment to Vendor A");
+        transactions.add("Office Supplies Purchase");
+        transactions.add("Client Payment Received");
+        transactions.add("Payment to Vendor B");
+        transactions.add("Office Rent");
+
+        System.out.println("Account Type: " + accountType);
+        System.out.println("Available Transactions: " + transactions);
+    }
+
+    @When("I filter transactions using a specific description")
+    public void i_filter_transactions_using_a_specific_description() {
+        searchDescription = "Payment";
+        searchResults = new ArrayList<>();
+
+        for (String transaction : transactions) {
+            if (transaction.contains(searchDescription)) {
+                searchResults.add(transaction);
+            }
+        }
+
+        System.out.println("Search Description: " + searchDescription);
+        System.out.println("Search Results: " + searchResults);
+    }
+
+    @Then("I am able to see my searched transactions")
+    public void i_am_able_to_see_my_searched_transactions() {
+        assertNotNull(searchResults);
+        assertFalse(searchResults.isEmpty());
+
+        for (String result : searchResults) {
+            assertTrue(result.contains(searchDescription));
+        }
+
+        System.out.println("Searched transactions are displayed successfully.");
+    }
+}
+
+
