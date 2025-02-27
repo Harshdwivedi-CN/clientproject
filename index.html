@@ -1,547 +1,101 @@
+Feature: Deposit Account Recent Transactions
 
-<!-- 16th code -->
+  @component
+  Scenario: Deposit account recent transactions success for retail deposit account
+    Given I am a small business retail deposit account holder
+    When I look up my recent transactions
+    Then I am able to see my posted transactions
 
-<!-- searchTransactionsByDataForRetailDepositAccount.feature -->
+  @component
+  Scenario: Deposit account recent transactions success for money market account
+    Given I am a money market account holder
+    When I look up my recent transactions
+    Then I am able to see my posted transactions
+
+  @component
+  Scenario: Deposit account recent transactions success for profile deposit account
+    Given I am a small business profile deposit account holder
+    When I look up my recent transactions
+    Then I am able to see my posted transactions
+
+  @component
+  Scenario: Deposit account recent transactions success for profile savings account
+    Given I am a small business profile savings account holder
+    When I look up my recent transactions
+    Then I am able to see my posted transactionsa
+
+  @component
+  Scenario: Deposit account recent transactions success for retail CD account
+    Given I am a small business retail CD account holder
+    When I look up my recent transactions
+    Then I am able to see my posted transactions
+
+  @component
+  Scenario: Deposit account recent transactions failure for mismatched accountReferenceId
+    Given I am a small business account holder with mismatched accountReferenceId
+    When I look up my recent transactions
+    Then I am not able to see my posted transactions
 
 
 
-Feature: Search transactions by date for retail deposit account
 
-  Scenario: Deposit account search transactions success for retail deposit account
-    Given I possess a retail deposit account tailored for my small business
-    When I filter transactions using a specific date range
-    Then I should see the transactions that occurred within that date range
-   
-   
-    <!-- SearchTransactionsRetailDepositSteps -->
+
 
     package StepDefinitions;
 
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
-import java.util.ArrayList;
-import java.util.List;
+import io.cucumber.java.en.When;
+
 import static org.junit.Assert.*;
-
-public class SearchTransactionsRetailDepositSteps {
-
-    private String accountType;
-    private List<String> transactions;
-    private List<String> searchResults;
-    private String searchDescription;
-
-    @Given("I hold a retail deposit account for my small business")
-    public void i_hold_a_retail_deposit_account_for_my_small_business() {
-        accountType = "Retail Deposit Account";
-        transactions = new ArrayList<>();
-        transactions.add("Payment to Vendor A");
-        transactions.add("Office Supplies Purchase");
-        transactions.add("Client Payment Received");
-        transactions.add("Payment to Vendor B");
-        transactions.add("Office Rent");
-
-        System.out.println("Account Type: " + accountType);
-        System.out.println("Available Transactions: " + transactions);
-    }
-
-    @When("I filter transactions using a specific description")
-    public void i_filter_transactions_using_a_specific_description() {
-        searchDescription = "Payment";
-        searchResults = new ArrayList<>();
-
-        for (String transaction : transactions) {
-            if (transaction.contains(searchDescription)) {
-                searchResults.add(transaction);
-            }
-        }
-
-        System.out.println("Search Description: " + searchDescription);
-        System.out.println("Search Results: " + searchResults);
-    }
-
-    @Then("I am able to see my searched transactions")
-    public void i_am_able_to_see_my_searched_transactions() {
-        assertNotNull(searchResults);
-        assertFalse(searchResults.isEmpty());
-
-        for (String result : searchResults) {
-            assertTrue(result.contains(searchDescription));
-        }
-
-        System.out.println("Searched transactions are displayed successfully.");
-    }
-}
-
-<!-- 17th code -->
-<!-- searchTransactionsByAmountForRetailDepositAccount.feature -->
-
-Feature: Search transactions by amount for retail deposit account
-
-  Scenario: Deposit account search transactions by amount successfully
-    Given I have a business account designed for retail deposits
-    When I filter transactions based on a specific amount range
-    Then I should be shown the transactions that match the specified amount criteria
-
-
-    <!-- SearchTransactionsByAmountSteps -->
-
-    package StepDefinitions;
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import static org.junit.Assert.*;
-
-public class SearchTransactionsByAmountSteps {
-
-    private String accountType;
-    private Map<String, Double> transactions;
-    private List<String> searchResults;
-    private double minAmount;
-    private double maxAmount;
-
-    @Given("I have a business account designed for retail deposits")
-    public void i_have_a_business_account_designed_for_retail_deposits() {
-        accountType = "Retail Deposit Account";
-        transactions = new HashMap<>();
-
-        // Mocking transactions with amounts
-        transactions.put("Payment to Vendor A", 150.00);
-        transactions.put("Office Supplies Purchase", 75.50);
-        transactions.put("Client Payment Received", 500.00);
-        transactions.put("Payment to Vendor B", 200.00);
-        transactions.put("Office Rent", 1000.00);
-
-        System.out.println("Account Type: " + accountType);
-        System.out.println("Available Transactions: " + transactions);
-    }
-
-    @When("I filter transactions based on a specific amount range")
-    public void i_filter_transactions_based_on_a_specific_amount_range() {
-        minAmount = 100.00;
-        maxAmount = 500.00;
-        searchResults = new ArrayList<>();
-
-        // Filtering transactions within the amount range
-        transactions.forEach((description, amount) -> {
-            if (amount >= minAmount && amount <= maxAmount) {
-                searchResults.add(description + ": $" + amount);
-            }
-        });
-
-        System.out.println("Amount Range: $" + minAmount + " to $" + maxAmount);
-        System.out.println("Search Results: " + searchResults);
-    }
-
-    @Then("I should be shown the transactions that match the specified amount criteria")
-    public void i_should_be_shown_the_transactions_that_match_the_specified_amount_criteria() {
-        assertNotNull(searchResults);
-        assertFalse(searchResults.isEmpty());
-
-        for (String result : searchResults) {
-            double amount = Double.parseDouble(result.split("\\$")[1]);
-            assertTrue(amount >= minAmount && amount <= maxAmount);
-        }
-
-        System.out.println("Transactions within the specified amount range are displayed successfully.");
-    }
-}
-
-<!-- 18th code -->
-
-<!-- downloadTreansactionsAsCsv.feature -->
-
-Feature: Download transactions as CSV for retail deposit account
-
-  Scenario: Successful download of transactions as CSV
-    Given I have access to my retail deposit account
-    When I export my transaction history in CSV format
-    Then I receive a csv file named "transactions.csv"
-
-
-    <!-- DownloadTransactionsAsCsvSteps -->
-
-    package StepDefinitions;
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import static org.junit.Assert.*;
-
-public class DownloadTransactionsAsCsvSteps {
-
-    private String accountType;
-    private Map<String, Double> transactions;
-    private File csvFile;
-
-    @Given("I have access to my retail deposit account")
-    public void i_have_access_to_my_retail_deposit_account() {
-        accountType = "Retail Deposit Account";
-        transactions = new HashMap<>();
-
-        // Mocking transactions data
-        transactions.put("Payment to Vendor A", 150.00);
-        transactions.put("Office Supplies Purchase", 75.50);
-        transactions.put("Client Payment Received", 500.00);
-        transactions.put("Payment to Vendor B", 200.00);
-
-        System.out.println("Account Type: " + accountType);
-        System.out.println("Available Transactions: " + transactions);
-    }
-
-    @When("I export my transaction history in CSV format")
-    public void i_export_my_transaction_history_in_csv_format() {
-        // Defining the CSV file name
-        String fileName = "transactions.csv";
-        csvFile = new File(fileName);
-
-        try (FileWriter writer = new FileWriter(csvFile)) {
-            // Writing CSV Header
-            writer.write("Description,Amount\n");
-
-            // Writing transactions to CSV file
-            transactions.forEach((description, amount) -> {
-                try {
-                    writer.write(description + "," + amount + "\n");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("CSV file generated: " + csvFile.getAbsolutePath());
-    }
-
-    @Then("I receive a csv file named \"transactions.csv\"")
-    public void i_receive_a_csv_file_named_transactions_csv() {
-        // Checking if the file was created and is not empty
-        assertTrue(csvFile.exists());
-        assertTrue(csvFile.length() > 0);
-
-        System.out.println("CSV file verification passed. File name: " + csvFile.getName());
-    }
-}
-
-<!-- 19th code -->
-<!-- DownloadTransactionsAsQfx.feature -->
-
-Feature: Download transactions as QFX for retail deposit account
-
-  Scenario: Successful download of transactions as QFX
-    Given I am logged in to my retail deposit account portal
-    When I export my transaction history in QFX format
-    Then I receive a QFX file named "transactions.qfx"
-
-
-    <!-- DownloadTransactionsAsQfxSteps -->
-
-    package StepDefinitions;
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import static org.junit.Assert.*;
-
-public class DownloadTransactionsAsQfxSteps {
-
-    private String accountPortal;
-    private Map<String, Double> transactions;
-    private File qfxFile;
-
-    @Given("I am logged in to my retail deposit account portal")
-    public void i_am_logged_in_to_my_retail_deposit_account_portal() {
-        accountPortal = "Retail Deposit Account Portal";
-        transactions = new HashMap<>();
-
-        // Mocking transactions data
-        transactions.put("Payment to Vendor X", 320.75);
-        transactions.put("Utility Bill Payment", 90.00);
-        transactions.put("Client Payment Received", 850.00);
-        transactions.put("Purchase at Office Supplies Store", 120.50);
-
-        System.out.println("Logged into: " + accountPortal);
-        System.out.println("Available Transactions: " + transactions);
-    }
-
-    @When("I export my transaction history in QFX format")
-    public void i_export_my_transaction_history_in_qfx_format() {
-        // Defining the QFX file name
-        String fileName = "transactions.qfx";
-        qfxFile = new File(fileName);
-
-        try (FileWriter writer = new FileWriter(qfxFile)) {
-            // Writing QFX Header (Simplified)
-            writer.write("<OFX>\n");
-            writer.write("  <BANKTRANLIST>\n");
-
-            // Writing transactions to QFX file
-            transactions.forEach((description, amount) -> {
-                try {
-                    writer.write("    <STMTTRN>\n");
-                    writer.write("      <TRNAMT>" + amount + "</TRNAMT>\n");
-                    writer.write("      <NAME>" + description + "</NAME>\n");
-                    writer.write("    </STMTTRN>\n");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-
-            writer.write("  </BANKTRANLIST>\n");
-            writer.write("</OFX>");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("QFX file generated: " + qfxFile.getAbsolutePath());
-    }
-
-    @Then("I receive a QFX file named \"transactions.qfx\"")
-    public void i_receive_a_qfx_file_named_transactions_qfx() {
-        // Checking if the file was created and is not empty
-        assertTrue(qfxFile.exists());
-        assertTrue(qfxFile.length() > 0);
-
-        System.out.println("QFX file verification passed. File name: " + qfxFile.getName());
-    }
-}
-
-<!-- 20th code -->
-
-<!-- DownloadTransaction.feature -->
-
-Feature: Download Transactions for Small Business Retail Deposit Account
-
-  Scenario: Successful transaction download as QBO for small business retail deposit account
-    Given I hold a small business retail deposit account
-    When I request to download my transactions in QBO format
-    Then I should receive a QBO file
-
-
-    <!-- DownloadTranasactionStep -->
-
-    package StepDefinitions;
-
-import static org.junit.Assert.assertTrue;
-import java.io.File;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-
-public class DownloadTransactionsSteps {
-
-    private boolean isAccountHolder = false;
-    private boolean isQBOFileGenerated = false;
-
-    @Given("I hold a small business retail deposit account")
-    public void i_hold_a_small_business_retail_deposit_account() {
-        isAccountHolder = true;
-    }
-
-    @When("I request to download my transactions in QBO format")
-    public void i_request_to_download_my_transactions_in_qbo_format() {
-        if (isAccountHolder) {
-            // Simulate QBO file generation
-            isQBOFileGenerated = generateQBOFile("transactions.qbo");
-        }
-    }
-
-    @Then("I should receive a QBO file")
-    public void i_should_receive_a_qbo_file() {
-        assertTrue("QBO file was not generated", isQBOFileGenerated);
-    }
-
-    private boolean generateQBOFile(String fileName) {
-        try {
-            File file = new File(fileName);
-            return file.createNewFile(); // Simulates creating a QBO file
-        } catch (Exception e) {
-            return false;
-        }
-    }
-}
-
-<!-- 21th code -->
-
-<!-- DownloadTransactionFailure.feature -->
-
-Feature: Download Transactions Failure for Mismatched Account Reference ID
-
-  Scenario: Failed transaction download as CSV due to mismatched account reference
-    Given I have a small business retail deposit account with an incorrect reference ID
-    When I attempt to download my transactions in CSV format
-    Then I should receive a 403 unauthorized error
-
-
-    <!-- DownloadTransactionsFailureSteps -->
-
-    package StepDefinitions;
-
-import static org.junit.Assert.assertEquals;
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-
-public class DownloadTransactionsFailureSteps {
-
-    private boolean isAccountReferenceValid = true;
-    private int responseCode = 200; // Default OK
-
-    @Given("I have a small business retail deposit account with an incorrect reference ID")
-    public void i_have_a_small_business_retail_deposit_account_with_an_incorrect_reference_ID() {
-        isAccountReferenceValid = false; // Simulating an incorrect account reference
-    }
-
-    @When("I attempt to download my transactions in CSV format")
-    public void i_attempt_to_download_my_transactions_in_CSV_format() {
-        if (!isAccountReferenceValid) {
-            responseCode = 403; // Unauthorized
-        }
-    }
-
-    @Then("I should receive a 403 unauthorized error")
-    public void i_should_receive_a_403_unauthorized_error() {
-        assertEquals("Expected a 403 Unauthorized error", 403, responseCode);
-    }
-}
-
-<!-- ViewRecentTransactions.feature -->
-
-Feature: View Recent Transactions for Small Business Retail Deposit Account
-
-  Scenario: Successfully retrieve recent posted transactions
-    Given I have an active retail deposit account
-    When I check my latest transactions
-    Then I should be able to view all successfully posted transactions within the specified timeframe
-
-
-    <!-- ViewRecentTransactionsSteps -->
-
-    package StepDefinitions;
-
-import static org.junit.Assert.assertTrue;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-
-public class ViewRecentTransactionsSteps {
-
-    private boolean isAccountActive = false;
-    private List<Transaction> transactions = new ArrayList<>();
-    private List<Transaction> filteredTransactions = new ArrayList<>();
-    private Date fromDate;
-    private Date toDate;
-
-    @Given("I have an active retail deposit account")
-    public void i_have_an_active_retail_deposit_account() {
-        isAccountActive = true;
-        populateTransactions(); // Simulating transactions for the last 2 years
-    }
-
-    @When("I check my latest transactions")
-    public void i_check_my_latest_transactions() {
-        if (isAccountActive) {
-            fromDate = getDateDaysAgo(30); // Fetch transactions from the last 30 days
-            toDate = new Date(); // Current date
-            filteredTransactions = transactions.stream()
-                    .filter(t -> !t.getDate().before(fromDate) && !t.getDate().after(toDate))
-                    .collect(Collectors.toList());
-        }
-    }
-
-    @Then("I should be able to view all successfully posted transactions within the specified timeframe")
-    public void i_should_be_able_to_view_all_successfully_posted_transactions_within_the_specified_timeframe() {
-        assertTrue("No transactions found within the date range", !filteredTransactions.isEmpty());
-        assertTrue("Some transactions are outside the specified range",
-                filteredTransactions.stream().allMatch(t -> !t.getDate().before(fromDate) && !t.getDate().after(toDate))
-        );
-    }
-
-    private void populateTransactions() {
-        transactions.add(new Transaction(getDateDaysAgo(10), 100.0, "Check", 101));
-        transactions.add(new Transaction(getDateDaysAgo(20), 200.0, "Deposit", 102));
-        transactions.add(new Transaction(getDateDaysAgo(40), 50.0, "Withdrawal", 103)); // Outside 30-day range
-    }
-
-    private Date getDateDaysAgo(int days) {
-        return new Date(System.currentTimeMillis() - (long) days * 24 * 60 * 60 * 1000);
-    }
-
-    class Transaction {
-        private Date date;
-        private double amount;
-        private String type;
-        private int checkNumber;
-
-        public Transaction(Date date, double amount, String type, int checkNumber) {
-            this.date = date;
-            this.amount = amount;
-            this.type = type;
-            this.checkNumber = checkNumber;
-        }
-
-        public Date getDate() {
-            return date;
-        }
-    }
-}
-
-
-
-<!-- deposit transaction -->
-package StepDefinitions;
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import static org.junit.Assert.*;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class DepositTransactionsSteps {
-    private boolean isRetailDepositHolder;
-    private List<String> recentTransactions;
+
+    private String accountType;
+    private boolean transactionsVisible;
 
     @Given("I am a small business retail deposit account holder")
     public void i_am_a_small_business_retail_deposit_account_holder() {
-        isRetailDepositHolder = true;
+        this.accountType = "RetailDeposit";
     }
 
-    @When("I check my recent transactions")
-    public void i_check_my_recent_transactions() {
-        if (isRetailDepositHolder) {
-            // Simulating transactions retrieval
-            recentTransactions = Arrays.asList("Deposit - $500", "Withdrawal - $200", "Transfer - $100");
-        }
+    @Given("I am a money market account holder")
+    public void i_am_a_money_market_account_holder() {
+        this.accountType = "MoneyMarket";
+    }
+
+    @Given("I am a small business profile deposit account holder")
+    public void i_am_a_small_business_profile_deposit_account_holder() {
+        this.accountType = "ProfileDeposit";
+    }
+
+    @Given("I am a small business profile savings account holder")
+    public void i_am_a_small_business_profile_savings_account_holder() {
+        this.accountType = "ProfileSavings";
+    }
+
+    @Given("I am a small business retail CD account holder")
+    public void i_am_a_small_business_retail_cd_account_holder() {
+        this.accountType = "RetailCD";
+    }
+
+    @Given("I am a small business account holder with mismatched accountReferenceId")
+    public void i_am_a_small_business_account_holder_with_mismatched_accountReferenceId() {
+        this.accountType = "MismatchedAccount";
+    }
+
+    @When("I look up my recent transactions")
+    public void i_look_up_my_recent_transactions() {
+        this.transactionsVisible = !this.accountType.equals("MismatchedAccount");
     }
 
     @Then("I am able to see my posted transactions")
     public void i_am_able_to_see_my_posted_transactions() {
-        assertNotNull("Transactions should not be null", recentTransactions);
-        assertFalse("Transactions should not be empty", recentTransactions.isEmpty());
-        System.out.println("Recent Transactions: " + recentTransactions);
+        assertTrue("Transactions should be visible", transactionsVisible);
+    }
+
+    @Then("I am not able to see my posted transactions")
+    public void i_am_not_able_to_see_my_posted_transactions() {
+        assertFalse("Transactions should not be visible", transactionsVisible);
     }
 }
