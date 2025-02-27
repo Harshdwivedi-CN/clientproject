@@ -1,101 +1,72 @@
 Feature: Deposit Account Recent Transactions
 
-  @component
-  Scenario: Deposit account recent transactions success for retail deposit account
-    Given I am a small business retail deposit account holder
-    When I look up my recent transactions
-    Then I am able to see my posted transactions
+@component
+Scenario: Deposit account recent transactions success for retail deposit account
+  Given I am a small business retail deposit account holder
+  When I look up my recent transactions
+  Then I am able to see my posted transactions
 
-  @component
-  Scenario: Deposit account recent transactions success for money market account
-    Given I am a money market account holder
-    When I look up my recent transactions
-    Then I am able to see my posted transactions
+@component
+Scenario: Deposit account recent transactions success for money market account
+  Given I am a money market account holder
+  When I look up my recent transactions
+  Then I am able to see my posted transactions
 
-  @component
-  Scenario: Deposit account recent transactions success for profile deposit account
-    Given I am a small business profile deposit account holder
-    When I look up my recent transactions
-    Then I am able to see my posted transactions
+@component
+Scenario: Deposit account recent transactions success for profile deposit account
+  Given I am a small business profile deposit account holder
+  When I look up my recent transactions
+  Then I am able to see my posted transactions
 
-  @component
-  Scenario: Deposit account recent transactions success for profile savings account
-    Given I am a small business profile savings account holder
-    When I look up my recent transactions
-    Then I am able to see my posted transactionsa
+@component
+Scenario: Deposit account recent transactions success for profile savings account
+  Given I am a small business profile savings account holder
+  When I look up my recent transactions
+  Then I am able to see my posted transactions
 
-  @component
-  Scenario: Deposit account recent transactions success for retail CD account
-    Given I am a small business retail CD account holder
-    When I look up my recent transactions
-    Then I am able to see my posted transactions
+@component
+Scenario: Deposit account recent transactions success for retail CD account
+  Given I am a small business retail CD account holder
+  When I look up my recent transactions
+  Then I am able to see my posted transactions
 
-  @component
-  Scenario: Deposit account recent transactions failure for mismatched accountReferenceId
-    Given I am a small business account holder with mismatched accountReferenceId
-    When I look up my recent transactions
-    Then I am not able to see my posted transactions
-
-
+@component
+Scenario: Deposit account recent transactions failure for mismatched accountReferenceId
+  Given I am a small business account holder with mismatched accountReferenceId
+  When I look up my recent transactions
+  Then I am not able to see my posted transactions
 
 
-
-
-    package StepDefinitions;
+  package transactions;
 
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-
+import io.cucumber.java.en.Then;
 import static org.junit.Assert.*;
 
 public class DepositTransactionsSteps {
-
+    
     private String accountType;
     private boolean transactionsVisible;
 
-    @Given("I am a small business retail deposit account holder")
-    public void i_am_a_small_business_retail_deposit_account_holder() {
-        this.accountType = "RetailDeposit";
-    }
-
-    @Given("I am a money market account holder")
-    public void i_am_a_money_market_account_holder() {
-        this.accountType = "MoneyMarket";
-    }
-
-    @Given("I am a small business profile deposit account holder")
-    public void i_am_a_small_business_profile_deposit_account_holder() {
-        this.accountType = "ProfileDeposit";
-    }
-
-    @Given("I am a small business profile savings account holder")
-    public void i_am_a_small_business_profile_savings_account_holder() {
-        this.accountType = "ProfileSavings";
-    }
-
-    @Given("I am a small business retail CD account holder")
-    public void i_am_a_small_business_retail_cd_account_holder() {
-        this.accountType = "RetailCD";
-    }
-
-    @Given("I am a small business account holder with mismatched accountReferenceId")
-    public void i_am_a_small_business_account_holder_with_mismatched_accountReferenceId() {
-        this.accountType = "MismatchedAccount";
+    @Given("I am a {string}")
+    public void account_holder_logged_in(String accountType) {
+        this.accountType = accountType;
     }
 
     @When("I look up my recent transactions")
-    public void i_look_up_my_recent_transactions() {
-        this.transactionsVisible = !this.accountType.equals("MismatchedAccount");
+    public void retrieve_recent_transactions() {
+        // Simulating transaction retrieval logic (mocked behavior)
+        transactionsVisible = !accountType.contains("mismatched");
     }
 
     @Then("I am able to see my posted transactions")
-    public void i_am_able_to_see_my_posted_transactions() {
+    public void should_see_posted_transactions() {
         assertTrue("Transactions should be visible", transactionsVisible);
     }
 
     @Then("I am not able to see my posted transactions")
-    public void i_am_not_able_to_see_my_posted_transactions() {
-        assertFalse("Transactions should not be visible", transactionsVisible);
+    public void should_not_see_posted_transactions() {
+        assertFalse("Transactions should NOT be visible", transactionsVisible);
     }
 }
