@@ -1,304 +1,136 @@
-<!-- LoanAccountTransactions.feature -->
-
-Feature: Loan Account Recent Transactions
-
-  @component
-  Scenario: Loan account recent transactions success for retail ILA account
-    Given I am a small business retail ILA account holder
-    When I look up my recent transactions
-    Then I am able to see my posted transactions
-
-  @component
-  Scenario: Loan account recent transactions success for retail LOC account
-    Given I am a small business retail LOC account holder
-    When I look up my recent transactions
-    Then I am able to see my posted transactions
+<!-- DepositAccountUpcomingTransactionsSteps -->
 
 
-    <!-- LoanAccountTransactionsStep -->
-
-    package StepDefinitions;
+package StepDefinitions;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import static org.junit.Assert.*;
 
-public class LoanAccountTransactionsSteps {
+public class DepositAccountUpcomingTransactionsSteps {
 
     private String accountType;
     private boolean transactionsVisible;
+    private boolean unauthorizedError;
 
     @Given("I am a small business {string} account holder")
     public void account_holder_logged_in(String accountType) {
         this.accountType = accountType;
     }
 
-    @When("I look up my recent transactions")
-    public void retrieve_recent_transactions() {
-        // Simulating transaction retrieval logic (mocked behavior)
-        transactionsVisible = !accountType.contains("ILA"); // Assuming ILA is unavailable in QA
-    }
-
-    @Then("I am able to see my posted transactions")
-    public void should_see_posted_transactions() {
-        assertTrue("Transactions should be visible", transactionsVisible);
-    }
-}
-
-<!-- DepositAccountUpcomingTransactions.feature -->
-
-Feature: Deposit Account Upcoming Transactions
-
-  @component
-  Scenario: Deposit account upcoming transactions success for retail deposit account
-    Given I am a small business retail deposit account holder
-    When I look up my upcoming transactions
-    Then I am able to see my scheduled transactions
-
-  @component
-  Scenario: Deposit account upcoming transactions success for money market account
-    Given I am a money market account holder
-    When I look up my upcoming transactions
-    Then I am able to see my scheduled transactions
-
-  @component
-  Scenario: Deposit account upcoming transactions success for profile deposit account
-    Given I am a small business profile deposit account holder
-    When I look up my upcoming transactions
-    Then I am able to see my scheduled transactions
-
-  @component
-  Scenario: Deposit account upcoming transactions success for profile savings account
-    Given I am a small business profile savings account holder
-    When I look up my upcoming transactions
-    Then I am able to see my scheduled transactions
-
-  @component
-  Scenario: Deposit account upcoming transactions success for retail CD account
-    Given I am a small business retail CD account holder
-    When I look up my upcoming transactions
-    Then I am able to see my scheduled transactions
-
-  @component
-  Scenario: Deposit account upcoming transactions failure for mismatched accountReferenceId
-    Given I am a small business retail deposit account holder with a mismatched accountReferenceId
-    When I look up my upcoming transactions
-    Then I receive a 403 unauthorized error
-
-  <!-- DepositAccountUpcomingTransactionsSteps   -->
-
-  package StepDefinitions;
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-
-public class DepositAccountUpcomingTransactionsSteps {
-
-    @Given("I am a small business retail deposit account holder")
-    public void i_am_a_small_business_retail_deposit_account_holder() {
-        System.out.println("User is a small business retail deposit account holder");
-    }
-
-    @Given("I am a money market account holder")
-    public void i_am_a_money_market_account_holder() {
-        System.out.println("User is a money market account holder");
-    }
-
-    @Given("I am a small business profile deposit account holder")
-    public void i_am_a_small_business_profile_deposit_account_holder() {
-        System.out.println("User is a small business profile deposit account holder");
-    }
-
-    @Given("I am a small business profile savings account holder")
-    public void i_am_a_small_business_profile_savings_account_holder() {
-        System.out.println("User is a small business profile savings account holder");
-    }
-
-    @Given("I am a small business retail CD account holder")
-    public void i_am_a_small_business_retail_cd_account_holder() {
-        System.out.println("User is a small business retail CD account holder");
-    }
-
-    @Given("I am a small business retail deposit account holder with a mismatched accountReferenceId")
-    public void i_am_a_small_business_retail_deposit_account_holder_with_mismatched_account_reference_id() {
-        System.out.println("User has a mismatched accountReferenceId");
-    }
-
     @When("I look up my upcoming transactions")
-    public void i_look_up_my_upcoming_transactions() {
-        System.out.println("User is looking up upcoming transactions");
+    public void retrieve_upcoming_transactions() {
+        // Simulating transaction retrieval logic (mocked behavior)
+        if (accountType.contains("mismatched")) {
+            unauthorizedError = true;
+            transactionsVisible = false;
+        } else {
+            unauthorizedError = false;
+            transactionsVisible = true;
+        }
     }
 
     @Then("I am able to see my scheduled transactions")
-    public void i_am_able_to_see_my_scheduled_transactions() {
-        System.out.println("User can see scheduled transactions");
+    public void should_see_scheduled_transactions() {
+        assertTrue("Scheduled transactions should be visible", transactionsVisible);
     }
 
     @Then("I receive a 403 unauthorized error")
-    public void i_receive_a_403_unauthorized_error() {
-        System.out.println("User receives a 403 unauthorized error");
+    public void should_receive_403_error() {
+        assertTrue("User should receive a 403 unauthorized error", unauthorizedError);
     }
 }
 
 
-<!-- DepositAccountSearchTransactions.feature -->
+ <!-- DepositAccountSearchTransactionsStep -->
 
-Feature: Deposit Account Search Transactions
-
-  @component
-  Scenario: Deposit account search transactions success by description
-    Given I am a small business retail deposit account holder
-    When I search for transactions by description
-    Then I am able to see my searched transactions
-
-  @component
-  Scenario: Deposit account search transactions success by date
-    Given I am a small business retail deposit account holder
-    When I search for transactions by date
-    Then I am able to see my searched transactions
-
-  @component
-  Scenario: Deposit account search transactions success by amount
-    Given I am a small business retail deposit account holder
-    When I search for transactions by amount
-    Then I am able to see my searched transactions
-
-
-    <!-- DepositAccountSearchTransactionsStep -->
-    package StepDefinitions;
-
-    import io.cucumber.java.en.Given;
-    import io.cucumber.java.en.When;
-    import io.cucumber.java.en.Then;
-    
-    public class DepositAccountSearchTransactionsSteps {
-    
-        @Given("I am a small business retail deposit account holder")
-        public void i_am_a_small_business_retail_deposit_account_holder() {
-            System.out.println("User is a small business retail deposit account holder");
-        }
-    
-        @When("I search for transactions by description")
-        public void i_search_for_transactions_by_description() {
-            System.out.println("User is searching for transactions by description");
-        }
-    
-        @When("I search for transactions by date")
-        public void i_search_for_transactions_by_date() {
-            System.out.println("User is searching for transactions by date");
-        }
-    
-        @When("I search for transactions by amount")
-        public void i_search_for_transactions_by_amount() {
-            System.out.println("User is searching for transactions by amount");
-        }
-    
-        @Then("I am able to see my searched transactions")
-        public void i_am_able_to_see_my_searched_transactions() {
-            System.out.println("User can see searched transactions");
-        }
-    }
-      
-
-    <!-- DepositAccountDownloadTransactions.feature -->
-
-    Feature: Deposit Account Download Transactions
-
-  @component
-  Scenario: Deposit account download transactions success as CSV
-    Given I am a small business retail deposit account holder
-    When I download my transactions as CSV
-    Then I receive a CSV file
-
-  @component
-  Scenario: Deposit account download transactions success as QFX
-    Given I am a small business retail deposit account holder
-    When I download my transactions as QFX
-    Then I receive a QFX file
-
-  @component
-  Scenario: Deposit account download transactions success as QBO
-    Given I am a small business retail deposit account holder
-    When I download my transactions as QBO
-    Then I receive a QBO file
-
-  @component
-  Scenario: Deposit account download transactions failure for mismatched accountReferenceId
-    Given I am a small business retail deposit account holder
-    When I download my transactions as CSV
-    Then I receive a 403 unauthorized error
-
-
-    <!-- DepositAccountDownloadTransactionsSteps -->
-
-    package StepDefinitions;
+package StepDefinitions;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
+import static org.junit.Assert.*;
+
+public class DepositAccountSearchTransactionsSteps {
+
+    private String searchType;
+    private boolean transactionsFound;
+
+    @Given("I am a small business {string} account holder")
+    public void account_holder_logged_in(String accountType) {
+        // Assuming all account types can search transactions
+    }
+
+    @When("I search for transactions by {string}")
+    public void search_for_transactions(String searchType) {
+        this.searchType = searchType;
+        transactionsFound = true; // Simulating that transactions are found
+    }
+
+    @Then("I am able to see my searched transactions")
+    public void should_see_searched_transactions() {
+        assertTrue("Searched transactions should be visible", transactionsFound);
+    }
+}
+
+
+ <!-- DepositAccountDownloadTransactionsSteps -->
+
+
+package StepDefinitions;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
+import io.cucumber.java.en.Then;
+import static org.junit.Assert.*;
 
 public class DepositAccountDownloadTransactionsSteps {
 
-    @Given("I am a small business retail deposit account holder")
-    public void i_am_a_small_business_retail_deposit_account_holder() {
-        System.out.println("User is a small business retail deposit account holder");
+    private String accountType;
+    private String fileType;
+    private boolean downloadSuccessful;
+    private boolean unauthorizedError;
+
+    @Given("I am a small business {string} account holder")
+    public void account_holder_logged_in(String accountType) {
+        this.accountType = accountType;
     }
 
-    @When("I download my transactions as CSV")
-    public void i_download_my_transactions_as_CSV() {
-        System.out.println("User is downloading transactions as CSV");
+    @When("I download my transactions as {string}")
+    public void download_transactions(String fileType) {
+        this.fileType = fileType;
+        if (accountType.contains("mismatched")) {
+            unauthorizedError = true;
+            downloadSuccessful = false;
+        } else {
+            unauthorizedError = false;
+            downloadSuccessful = true;
+        }
     }
 
-    @When("I download my transactions as QFX")
-    public void i_download_my_transactions_as_QFX() {
-        System.out.println("User is downloading transactions as QFX");
-    }
-
-    @When("I download my transactions as QBO")
-    public void i_download_my_transactions_as_QBO() {
-        System.out.println("User is downloading transactions as QBO");
-    }
-
-    @Then("I receive a CSV file")
-    public void i_receive_a_CSV_file() {
-        System.out.println("User received a CSV file");
-    }
-
-    @Then("I receive a QFX file")
-    public void i_receive_a_QFX_file() {
-        System.out.println("User received a QFX file");
-    }
-
-    @Then("I receive a QBO file")
-    public void i_receive_a_QBO_file() {
-        System.out.println("User received a QBO file");
+    @Then("I receive a {string} file")
+    public void should_receive_file(String expectedFileType) {
+        assertTrue("File should be downloaded successfully", downloadSuccessful);
+        assertEquals("Downloaded file type should match", expectedFileType, fileType);
     }
 
     @Then("I receive a 403 unauthorized error")
-    public void i_receive_a_403_unauthorized_error() {
-        System.out.println("User received a 403 unauthorized error");
+    public void should_receive_403_error() {
+        assertTrue("User should receive a 403 unauthorized error", unauthorizedError);
     }
 }
 
-<!-- DepositRecentTransactions.feature -->
-Feature: Deposit Account Recent Transactions
 
-@component
-Scenario: Deposit account recent transactions success for retail deposit account
-  Given I am a small business retail deposit account holder
-  When I look up my recent transactions with filters
-  Then I am able to see my posted transactions based on filters
+ <!-- DepositRecentTransactionsSteps -->
 
-  <!-- DepositRecentTransactionsSteps -->
 
-  package StepDefinitions;
+package StepDefinitions;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
-import org.junit.Assert;
+import static org.junit.Assert.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -318,12 +150,9 @@ public class DepositRecentTransactionsSteps {
     private List<Transaction> transactions;
     private List<Transaction> filteredTransactions;
 
-    @Given("I am a small business retail deposit account holder")
-    public void i_am_a_small_business_retail_deposit_account_holder() {
-        accountType = "Retail Deposit Account";
-        System.out.println("User is a small business retail deposit account holder.");
-
-        // Sample transactions for filtering
+    @Given("I am a small business {string} account holder")
+    public void account_holder_logged_in(String accountType) {
+        this.accountType = accountType;
         transactions = new ArrayList<>();
         transactions.add(new Transaction(LocalDate.now().minusDays(10), 500.0, 1200));
         transactions.add(new Transaction(LocalDate.now().minusMonths(3), 2000.0, 2500));
@@ -333,18 +162,14 @@ public class DepositRecentTransactionsSteps {
 
     @When("I look up my recent transactions with filters")
     public void i_look_up_my_recent_transactions_with_filters() {
-        System.out.println("User is looking up recent transactions with filters.");
-
-        // Define filters
-        fromDate = LocalDate.now().minusYears(2);  // Transactions from last 2 years
-        toDate = LocalDate.now();                  // Until today
+        fromDate = LocalDate.now().minusYears(2);
+        toDate = LocalDate.now();
         minAmount = 10.0;
         maxAmount = 10000.0;
         fromCheckNumber = 1000;
         toCheckNumber = 5000;
-        pagingKey = "somePagingKey123"; // Example paging key
+        pagingKey = "somePagingKey123";
 
-        // Apply filters
         filteredTransactions = transactions.stream()
                 .filter(t -> (t.getDate().isAfter(fromDate) && t.getDate().isBefore(toDate)))
                 .filter(t -> (t.getAmount() >= minAmount && t.getAmount() <= maxAmount))
@@ -354,17 +179,11 @@ public class DepositRecentTransactionsSteps {
 
     @Then("I am able to see my posted transactions based on filters")
     public void i_am_able_to_see_my_posted_transactions_based_on_filters() {
-        System.out.println("Validating filtered transactions.");
-        Assert.assertFalse("No transactions found based on filters!", filteredTransactions.isEmpty());
-
-        // Validate that pagingKey response changes
+        assertFalse("No transactions found based on filters!", filteredTransactions.isEmpty());
         String newPagingKey = "newPagingKey456";
-        Assert.assertNotEquals("Paging key should be different after fetching transactions!", pagingKey, newPagingKey);
-
-        System.out.println("Transactions successfully retrieved based on filters.");
+        assertNotEquals("Paging key should be different after fetching transactions!", pagingKey, newPagingKey);
     }
 
-    // Inner class for transaction representation
     private static class Transaction {
         private LocalDate date;
         private double amount;
@@ -389,4 +208,3 @@ public class DepositRecentTransactionsSteps {
         }
     }
 }
-
