@@ -1,26 +1,32 @@
-<dependencies>
-    <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>5.9.2</version> <!-- Use the latest version -->
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
-        <version>5.9.2</version>
-        <scope>test</scope>
-    </dependency>
-</dependencies>
+<profiles>
+    <profile>
+        <id>single-tag</id>
+        <properties>
+            <cucumber.filter.tags>@component</cucumber.filter.tags>
+            <cucumber.features>
+                src/test/java/features/DepositTransactions.feature,
+                src/test/java/features/WithdrawTransactions.feature,
+                src/test/java/features/BalanceEnquiry.feature,
+                src/test/java/features/FundTransfer.feature,
+                src/test/java/features/AccountStatement.feature,
+                src/test/java/features/BillPayment.feature
+            </cucumber.features>
+        </properties>
+    </profile>
 
-
-<build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>3.0.0-M7</version> <!-- Ensure it's updated -->
-        </plugin>
-    </plugins>
-</build>
- 
+    <profile>
+        <id>smoke_or_component</id>
+        <properties>
+            <!-- This "OR" Cucumber expression will run all tests with either tag -->
+            <cucumber.filter.tags>@smoke OR @component</cucumber.filter.tags>
+            <cucumber.features>
+                src/test/java/features/DepositTransactions.feature,
+                src/test/java/features/WithdrawTransactions.feature,
+                src/test/java/features/BalanceEnquiry.feature,
+                src/test/java/features/FundTransfer.feature,
+                src/test/java/features/AccountStatement.feature,
+                src/test/java/features/BillPayment.feature
+            </cucumber.features>
+        </properties>
+    </profile>
+</profiles>
