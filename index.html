@@ -1,210 +1,26 @@
-<!-- DepositAccountUpcomingTransactionsSteps -->
+<dependencies>
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>5.9.2</version> <!-- Use the latest version -->
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>5.9.2</version>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
 
 
-package StepDefinitions;
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import static org.junit.Assert.*;
-
-public class DepositAccountUpcomingTransactionsSteps {
-
-    private String accountType;
-    private boolean transactionsVisible;
-    private boolean unauthorizedError;
-
-    @Given("I am a small business {string} account holder")
-    public void account_holder_logged_in(String accountType) {
-        this.accountType = accountType;
-    }
-
-    @When("I look up my upcoming transactions")
-    public void retrieve_upcoming_transactions() {
-        // Simulating transaction retrieval logic (mocked behavior)
-        if (accountType.contains("mismatched")) {
-            unauthorizedError = true;
-            transactionsVisible = false;
-        } else {
-            unauthorizedError = false;
-            transactionsVisible = true;
-        }
-    }
-
-    @Then("I am able to see my scheduled transactions")
-    public void should_see_scheduled_transactions() {
-        assertTrue("Scheduled transactions should be visible", transactionsVisible);
-    }
-
-    @Then("I receive a 403 unauthorized error")
-    public void should_receive_403_error() {
-        assertTrue("User should receive a 403 unauthorized error", unauthorizedError);
-    }
-}
-
-
- <!-- DepositAccountSearchTransactionsStep -->
-
-package StepDefinitions;
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import static org.junit.Assert.*;
-
-public class DepositAccountSearchTransactionsSteps {
-
-    private String searchType;
-    private boolean transactionsFound;
-
-    @Given("I am a small business {string} account holder")
-    public void account_holder_logged_in(String accountType) {
-        // Assuming all account types can search transactions
-    }
-
-    @When("I search for transactions by {string}")
-    public void search_for_transactions(String searchType) {
-        this.searchType = searchType;
-        transactionsFound = true; // Simulating that transactions are found
-    }
-
-    @Then("I am able to see my searched transactions")
-    public void should_see_searched_transactions() {
-        assertTrue("Searched transactions should be visible", transactionsFound);
-    }
-}
-
-
- <!-- DepositAccountDownloadTransactionsSteps -->
-
-
-package StepDefinitions;
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import static org.junit.Assert.*;
-
-public class DepositAccountDownloadTransactionsSteps {
-
-    private String accountType;
-    private String fileType;
-    private boolean downloadSuccessful;
-    private boolean unauthorizedError;
-
-    @Given("I am a small business {string} account holder")
-    public void account_holder_logged_in(String accountType) {
-        this.accountType = accountType;
-    }
-
-    @When("I download my transactions as {string}")
-    public void download_transactions(String fileType) {
-        this.fileType = fileType;
-        if (accountType.contains("mismatched")) {
-            unauthorizedError = true;
-            downloadSuccessful = false;
-        } else {
-            unauthorizedError = false;
-            downloadSuccessful = true;
-        }
-    }
-
-    @Then("I receive a {string} file")
-    public void should_receive_file(String expectedFileType) {
-        assertTrue("File should be downloaded successfully", downloadSuccessful);
-        assertEquals("Downloaded file type should match", expectedFileType, fileType);
-    }
-
-    @Then("I receive a 403 unauthorized error")
-    public void should_receive_403_error() {
-        assertTrue("User should receive a 403 unauthorized error", unauthorizedError);
-    }
-}
-
-
- <!-- DepositRecentTransactionsSteps -->
-
-
-package StepDefinitions;
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import static org.junit.Assert.*;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-public class DepositRecentTransactionsSteps {
-
-    private String accountType;
-    private String pagingKey;
-    private LocalDate fromDate;
-    private LocalDate toDate;
-    private double minAmount;
-    private double maxAmount;
-    private int fromCheckNumber;
-    private int toCheckNumber;
-    private List<Transaction> transactions;
-    private List<Transaction> filteredTransactions;
-
-    @Given("I am a small business {string} account holder")
-    public void account_holder_logged_in(String accountType) {
-        this.accountType = accountType;
-        transactions = new ArrayList<>();
-        transactions.add(new Transaction(LocalDate.now().minusDays(10), 500.0, 1200));
-        transactions.add(new Transaction(LocalDate.now().minusMonths(3), 2000.0, 2500));
-        transactions.add(new Transaction(LocalDate.now().minusYears(1), 10000.0, 3500));
-        transactions.add(new Transaction(LocalDate.now().minusDays(20), 50.0, 4500));
-    }
-
-    @When("I look up my recent transactions with filters")
-    public void i_look_up_my_recent_transactions_with_filters() {
-        fromDate = LocalDate.now().minusYears(2);
-        toDate = LocalDate.now();
-        minAmount = 10.0;
-        maxAmount = 10000.0;
-        fromCheckNumber = 1000;
-        toCheckNumber = 5000;
-        pagingKey = "somePagingKey123";
-
-        filteredTransactions = transactions.stream()
-                .filter(t -> (t.getDate().isAfter(fromDate) && t.getDate().isBefore(toDate)))
-                .filter(t -> (t.getAmount() >= minAmount && t.getAmount() <= maxAmount))
-                .filter(t -> (t.getCheckNumber() >= fromCheckNumber && t.getCheckNumber() <= toCheckNumber))
-                .collect(Collectors.toList());
-    }
-
-    @Then("I am able to see my posted transactions based on filters")
-    public void i_am_able_to_see_my_posted_transactions_based_on_filters() {
-        assertFalse("No transactions found based on filters!", filteredTransactions.isEmpty());
-        String newPagingKey = "newPagingKey456";
-        assertNotEquals("Paging key should be different after fetching transactions!", pagingKey, newPagingKey);
-    }
-
-    private static class Transaction {
-        private LocalDate date;
-        private double amount;
-        private int checkNumber;
-
-        public Transaction(LocalDate date, double amount, int checkNumber) {
-            this.date = date;
-            this.amount = amount;
-            this.checkNumber = checkNumber;
-        }
-
-        public LocalDate getDate() {
-            return date;
-        }
-
-        public double getAmount() {
-            return amount;
-        }
-
-        public int getCheckNumber() {
-            return checkNumber;
-        }
-    }
-}
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M7</version> <!-- Ensure it's updated -->
+        </plugin>
+    </plugins>
+</build>
+ 
