@@ -4,45 +4,30 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 
-public class DepositAccountDownloadTransactionsSteps {
+public class DepositAccountSearchTransactionsSteps {
 
     @Given("I am a small business retail deposit account holder")
     public void i_am_a_small_business_retail_deposit_account_holder() {
         System.out.println("User is a small business retail deposit account holder");
     }
 
-    @When("I download my transactions as CSV")
-    public void i_download_my_transactions_as_CSV() {
-        System.out.println("User is downloading transactions as CSV");
+    @When("I search for transactions by description")
+    public void i_search_for_transactions_by_description() {
+        System.out.println("User is searching for transactions by description");
     }
 
-    @When("I download my transactions as QFX")
-    public void i_download_my_transactions_as_QFX() {
-        System.out.println("User is downloading transactions as QFX");
+    @When("I search for transactions by date")
+    public void i_search_for_transactions_by_date() {
+        System.out.println("User is searching for transactions by date");
     }
 
-    @When("I download my transactions as QBO")
-    public void i_download_my_transactions_as_QBO() {
-        System.out.println("User is downloading transactions as QBO");
+    @When("I search for transactions by amount")
+    public void i_search_for_transactions_by_amount() {
+        System.out.println("User is searching for transactions by amount");
     }
 
-    @Then("I receive a CSV file")
-    public void i_receive_a_CSV_file() {
-        System.out.println("User received a CSV file");
-    }
-
-    @Then("I receive a QFX file")
-    public void i_receive_a_QFX_file() {
-        System.out.println("User received a QFX file");
-    }
-
-    @Then("I receive a QBO file")
-    public void i_receive_a_QBO_file() {
-        System.out.println("User received a QBO file");
-    }
-
-    @Then("I receive a 403 unauthorized error")
-    public void i_receive_a_403_unauthorized_error() {
-        System.out.println("User received a 403 unauthorized error");
+    @Then("I am able to see my searched transactions")
+    public void i_am_able_to_see_my_searched_transactions() {
+        System.out.println("User can see searched transactions");
     }
 }
