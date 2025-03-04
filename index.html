@@ -1,47 +1,4 @@
-Feature: Deposit Account Recent Transactions
-
-  @component
-  Scenario: Deposit account recent transactions for retail deposit account
-    Given I have a small business retail deposit account
-    When I search for my recent deposit transactions
-    Then I should see my posted deposit transactions
-
-  @component
-  Scenario: Deposit account recent transactions for money market account
-    Given I own a money market deposit account
-    When I check my recent money market transactions
-    Then I should be able to view my posted money market transactions
-
-  @component
-  Scenario: Deposit account recent transactions for profile deposit account
-    Given I have a small business profile deposit account
-    When I filter my recent profile deposit transactions
-    Then I should see my filtered posted profile deposit transactions
-
-  @component
-  Scenario: Deposit account recent transactions for profile savings account
-    Given I am a small business profile savings account holder
-    When I retrieve my latest profile savings transactions
-    Then I should see my posted profile savings transactions
-
-  @component
-  Scenario: Deposit account recent transactions for retail CD account
-    Given I maintain a small business retail CD account
-    When I fetch my recent retail CD transactions
-    Then I should be able to access my posted retail CD transactions
-
-  @component
-  Scenario: Deposit account recent transactions failure for mismatched accountReferenceId
-    Given I have a small business account with an incorrect accountReferenceId
-    When I attempt to view my recent transactions
-    Then I should not be able to see any posted transactions
-
-
-
-
-
-
-    package stepdefinitions;
+package stepdefinitions;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
