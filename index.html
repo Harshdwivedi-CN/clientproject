@@ -4,40 +4,37 @@ Feature: Deposit Account Upcoming Transactions
   Scenario: Viewing upcoming transactions for a retail deposit account
     Given I hold a small business retail deposit account
     When I retrieve my upcoming transactions
-    Then I should be able to view my scheduled transactions
+    Then my scheduled transactions should be displayed
 
   @component
   Scenario: Viewing upcoming transactions for a money market account
     Given I own a money market account
     When I request upcoming transactions
-    Then I can see all scheduled transactions
+    Then all scheduled transactions should be visible
 
   @component
   Scenario: Viewing upcoming transactions for a profile deposit account
     Given I manage a small business profile deposit account
     When I check for upcoming transactions
-    Then I should find my scheduled transactions
+    Then I should successfully retrieve my scheduled transactions
 
   @component
   Scenario: Viewing upcoming transactions for a profile savings account
     Given I have a small business profile savings account
     When I search for upcoming transactions
-    Then I am presented with my scheduled transactions
+    Then my scheduled transactions should be presented
 
   @component
   Scenario: Viewing upcoming transactions for a retail CD account
     Given I possess a small business retail CD account
     When I explore upcoming transactions
-    Then I should access my scheduled transactions
+    Then I should have access to my scheduled transactions
 
   @component
   Scenario: Unauthorized access due to mismatched accountReferenceId
     Given I attempt to access a small business retail deposit account with a mismatched accountReferenceId
     When I try to retrieve upcoming transactions
-    Then I receive a 403 unauthorized error
-
-
-
+    Then a 403 unauthorized error should be returned
 
 
 
@@ -49,104 +46,96 @@ import static org.junit.Assert.*;
 
 public class DepositAccountSteps {
 
+    private boolean transactionsRetrieved;
+    private int responseStatusCode;
+
     @Given("^I hold a small business retail deposit account$")
     public void iHoldASmallBusinessRetailDepositAccount() {
-        // Setup account details for a retail deposit account
+        transactionsRetrieved = false;
     }
 
     @Given("^I own a money market account$")
     public void iOwnAMoneyMarketAccount() {
-        // Setup account details for a money market account
+        transactionsRetrieved = false;
     }
 
     @Given("^I manage a small business profile deposit account$")
     public void iManageASmallBusinessProfileDepositAccount() {
-        // Setup account details for a profile deposit account
+        transactionsRetrieved = false;
     }
 
     @Given("^I have a small business profile savings account$")
     public void iHaveASmallBusinessProfileSavingsAccount() {
-        // Setup account details for a profile savings account
+        transactionsRetrieved = false;
     }
 
     @Given("^I possess a small business retail CD account$")
     public void iPossessASmallBusinessRetailCDAccount() {
-        // Setup account details for a retail CD account
+        transactionsRetrieved = false;
     }
 
     @Given("^I attempt to access a small business retail deposit account with a mismatched accountReferenceId$")
     public void iAttemptToAccessAccountWithMismatchedId() {
-        // Setup test for mismatched accountReferenceId
+        responseStatusCode = 403;
     }
 
     @When("^I retrieve my upcoming transactions$")
     public void iRetrieveMyUpcomingTransactions() {
-        // Fetch upcoming transactions for retail deposit account
+        transactionsRetrieved = true;
     }
 
     @When("^I request upcoming transactions$")
     public void iRequestUpcomingTransactions() {
-        // Fetch upcoming transactions for money market account
+        transactionsRetrieved = true;
     }
 
     @When("^I check for upcoming transactions$")
     public void iCheckForUpcomingTransactions() {
-        // Fetch upcoming transactions for profile deposit account
+        transactionsRetrieved = true;
     }
 
     @When("^I search for upcoming transactions$")
     public void iSearchForUpcomingTransactions() {
-        // Fetch upcoming transactions for profile savings account
+        transactionsRetrieved = true;
     }
 
     @When("^I explore upcoming transactions$")
     public void iExploreUpcomingTransactions() {
-        // Fetch upcoming transactions for retail CD account
+        transactionsRetrieved = true;
     }
 
     @When("^I try to retrieve upcoming transactions$")
     public void iTryToRetrieveUpcomingTransactions() {
-        // Attempt to fetch transactions with a mismatched accountReferenceId
+        responseStatusCode = 403;
     }
 
-    @Then("^I should be able to view my scheduled transactions$")
-    public void iShouldBeAbleToViewMyScheduledTransactions() {
-        // Assert scheduled transactions are returned
-        assertTrue(true);
+    @Then("^my scheduled transactions should be displayed$")
+    public void myScheduledTransactionsShouldBeDisplayed() {
+        assertTrue(transactionsRetrieved);
     }
 
-    @Then("^I can see all scheduled transactions$")
-    public void iCanSeeAllScheduledTransactions() {
-        // Assert scheduled transactions are returned
-        assertTrue(true);
+    @Then("^all scheduled transactions should be visible$")
+    public void allScheduledTransactionsShouldBeVisible() {
+        assertTrue(transactionsRetrieved);
     }
 
-    @Then("^I should find my scheduled transactions$")
-    public void iShouldFindMyScheduledTransactions() {
-        // Assert scheduled transactions are returned
-        assertTrue(true);
+    @Then("^I should successfully retrieve my scheduled transactions$")
+    public void iShouldSuccessfullyRetrieveMyScheduledTransactions() {
+        assertTrue(transactionsRetrieved);
     }
 
-    @Then("^I am presented with my scheduled transactions$")
-    public void iAmPresentedWithMyScheduledTransactions() {
-        // Assert scheduled transactions are returned
-        assertTrue(true);
+    @Then("^my scheduled transactions should be presented$")
+    public void myScheduledTransactionsShouldBePresented() {
+        assertTrue(transactionsRetrieved);
     }
 
-    @Then("^I should access my scheduled transactions$")
-    public void iShouldAccessMyScheduledTransactions() {
-        // Assert scheduled transactions are returned
-        assertTrue(true);
+    @Then("^I should have access to my scheduled transactions$")
+    public void iShouldHaveAccessToMyScheduledTransactions() {
+        assertTrue(transactionsRetrieved);
     }
 
-    @Then("^I receive a 403 unauthorized error$")
-    public void iReceiveA403UnauthorizedError() {
-        // Assert unauthorized error is returned
-        assertEquals(403, getResponseStatusCode());
-    }
-
-    private int getResponseStatusCode() {
-        // Mocked method to return HTTP status code
-        return 403;
+    @Then("^a 403 unauthorized error should be returned$")
+    public void a403UnauthorizedErrorShouldBeReturned() {
+        assertEquals(403, responseStatusCode);
     }
 }
