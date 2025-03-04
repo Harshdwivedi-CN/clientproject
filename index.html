@@ -1,158 +1,51 @@
-Feature: Deposit Account Recent Transactions
-
-  @component
-  Scenario: Retrieve recent transactions for a retail deposit account
-    Given My account type is a small business retail deposit account
-    When I request a list of recent transactions for my retail deposit account
-    Then I should receive the posted transactions for my retail deposit account
-
-  @component
-  Scenario: Retrieve recent transactions for a money market account
-    Given I am a verified holder of a money market deposit account
-    When I review my recent transactions for my money market account
-    Then I should be able to see my posted money market transactions
-
-  @component
-  Scenario: Retrieve recent transactions for a profile deposit account
-    Given My profile deposit account is registered under small business banking
-    When I apply filters to view my recent profile deposit transactions
-    Then I should get my filtered posted transactions for my profile deposit account
-
-  @component
-  Scenario: Retrieve recent transactions for a profile savings account
-    Given My small business profile savings account is active
-    When I retrieve the latest transactions from my profile savings account
-    Then I should successfully view my posted transactions for my profile savings account
-
-  @component
-  Scenario: Retrieve recent transactions for a retail CD account
-    Given I have an active small business retail CD account
-    When I fetch my latest transactions for my retail CD account
-    Then I should be presented with my posted transactions for my retail CD account
-
-  @component
-  Scenario: Failed retrieval due to mismatched accountReferenceId
-    Given My accountReferenceId does not match any existing small business accounts
-    When I attempt to access my recent transactions with an invalid reference
-    Then I should receive an error indicating no transactions are available
-
-
-    <!-- stepdefinition -->
-
-
-    package stepdefinitions;
+package StepDefinitions;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
-import static org.junit.Assert.*;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.logging.Logger;
 
-public class DepositAccountRecentTransactionsSteps {
+public class DepositAccountDownloadTransactionsSteps {
 
-    private boolean accountExists;
-    private List<String> postedTransactions;
+    private static final Logger logger = Logger.getLogger(DepositAccountDownloadTransactionsSteps.class.getName());
 
-    @Given("My account type is a small business retail deposit account")
-    public void my_account_type_is_a_small_business_retail_deposit_account() {
-        accountExists = true;
-        assertTrue("Retail deposit account should exist", accountExists);
+    @Given("I am a small business retail deposit account holder")
+    public void i_am_a_small_business_retail_deposit_account_holder() {
+        logger.info("User is a small business retail deposit account holder");
     }
 
-    @When("I request a list of recent transactions for my retail deposit account")
-    public void i_request_a_list_of_recent_transactions_for_my_retail_deposit_account() {
-        postedTransactions = List.of("Retail Deposit Txn 1", "Retail Deposit Txn 2");
+    @When("I download my transactions as CSV")
+    public void i_download_my_transactions_as_CSV() {
+        logger.info("User is downloading transactions as CSV");
     }
 
-    @Then("I should receive the posted transactions for my retail deposit account")
-    public void i_should_receive_the_posted_transactions_for_my_retail_deposit_account() {
-        assertNotNull("Transactions should not be null", postedTransactions);
-        assertFalse("Transaction list should not be empty", postedTransactions.isEmpty());
+    @When("I download my transactions as QFX")
+    public void i_download_my_transactions_as_QFX() {
+        logger.info("User is downloading transactions as QFX");
     }
 
-    @Given("I am a verified holder of a money market deposit account")
-    public void i_am_a_verified_holder_of_a_money_market_deposit_account() {
-        accountExists = true;
-        assertTrue("Money market account should exist", accountExists);
+    @When("I download my transactions as QBO")
+    public void i_download_my_transactions_as_QBO() {
+        logger.info("User is downloading transactions as QBO");
     }
 
-    @When("I review my recent transactions for my money market account")
-    public void i_review_my_recent_transactions_for_my_money_market_account() {
-        postedTransactions = List.of("Money Market Txn 1", "Money Market Txn 2");
+    @Then("I receive a CSV file")
+    public void i_receive_a_CSV_file() {
+        logger.info("User received a CSV file");
     }
 
-    @Then("I should be able to see my posted money market transactions")
-    public void i_should_be_able_to_see_my_posted_money_market_transactions() {
-        assertNotNull("Transactions should not be null", postedTransactions);
-        assertFalse("Transaction list should not be empty", postedTransactions.isEmpty());
+    @Then("I receive a QFX file")
+    public void i_receive_a_QFX_file() {
+        logger.info("User received a QFX file");
     }
 
-    @Given("My profile deposit account is registered under small business banking")
-    public void my_profile_deposit_account_is_registered_under_small_business_banking() {
-        accountExists = true;
-        assertTrue("Profile deposit account should exist", accountExists);
+    @Then("I receive a QBO file")
+    public void i_receive_a_QBO_file() {
+        logger.info("User received a QBO file");
     }
 
-    @When("I apply filters to view my recent profile deposit transactions")
-    public void i_apply_filters_to_view_my_recent_profile_deposit_transactions() {
-        postedTransactions = List.of("Profile Deposit Txn 1", "Profile Deposit Txn 2");
-    }
-
-    @Then("I should get my filtered posted transactions for my profile deposit account")
-    public void i_should_get_my_filtered_posted_transactions_for_my_profile_deposit_account() {
-        assertNotNull("Transactions should not be null", postedTransactions);
-        assertFalse("Transaction list should not be empty", postedTransactions.isEmpty());
-    }
-
-    @Given("My small business profile savings account is active")
-    public void my_small_business_profile_savings_account_is_active() {
-        accountExists = true;
-        assertTrue("Profile savings account should exist", accountExists);
-    }
-
-    @When("I retrieve the latest transactions from my profile savings account")
-    public void i_retrieve_the_latest_transactions_from_my_profile_savings_account() {
-        postedTransactions = List.of("Profile Savings Txn 1", "Profile Savings Txn 2");
-    }
-
-    @Then("I should successfully view my posted transactions for my profile savings account")
-    public void i_should_successfully_view_my_posted_transactions_for_my_profile_savings_account() {
-        assertNotNull("Transactions should not be null", postedTransactions);
-        assertFalse("Transaction list should not be empty", postedTransactions.isEmpty());
-    }
-
-    @Given("I have an active small business retail CD account")
-    public void i_have_an_active_small_business_retail_cd_account() {
-        accountExists = true;
-        assertTrue("Retail CD account should exist", accountExists);
-    }
-
-    @When("I fetch my latest transactions for my retail CD account")
-    public void i_fetch_my_latest_transactions_for_my_retail_cd_account() {
-        postedTransactions = List.of("Retail CD Txn 1", "Retail CD Txn 2");
-    }
-
-    @Then("I should be presented with my posted transactions for my retail CD account")
-    public void i_should_be_presented_with_my_posted_transactions_for_my_retail_cd_account() {
-        assertNotNull("Transactions should not be null", postedTransactions);
-        assertFalse("Transaction list should not be empty", postedTransactions.isEmpty());
-    }
-
-    @Given("My accountReferenceId does not match any existing small business accounts")
-    public void my_account_reference_id_does_not_match_any_existing_small_business_accounts() {
-        accountExists = false;
-        assertFalse("Account should not be valid due to incorrect accountReferenceId", accountExists);
-    }
-
-    @When("I attempt to access my recent transactions with an invalid reference")
-    public void i_attempt_to_access_my_recent_transactions_with_an_invalid_reference() {
-        postedTransactions = new ArrayList<>(); // No transactions should be returned
-    }
-
-    @Then("I should receive an error indicating no transactions are available")
-    public void i_should_receive_an_error_indicating_no_transactions_are_available() {
-        assertNotNull("Transactions list should not be null", postedTransactions);
-        assertTrue("Transaction list should be empty", postedTransactions.isEmpty());
+    @Then("I receive a 403 unauthorized error")
+    public void i_receive_a_403_unauthorized_error() {
+        logger.warning("User received a 403 unauthorized error");
     }
 }
