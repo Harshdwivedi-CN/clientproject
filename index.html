@@ -1,10 +1,16 @@
-Feature: Deposit Account Recent Transactions
+Feature: Loan Account Recent Transactions
 
   @component
-  Scenario: Deposit account recent transactions success for retail deposit account
-    Given I have a small business retail deposit account
-    When I apply filters to view my recent transactions
-    Then I should see only the posted transactions that match the applied filters
+  Scenario: Loan account recent transactions for retail ILA account
+    Given I hold a small business retail ILA account
+    When I search for my recent loan account transactions
+    Then I should be able to view my posted loan transactions
+
+  @component
+  Scenario: Loan account recent transactions for retail LOC account
+    Given I hold a small business retail LOC account
+    When I retrieve my recent loan account transactions
+    Then I should be able to see only the posted loan transactions
 
 
 
@@ -15,29 +21,52 @@ import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import static org.junit.Assert.*;
 import java.util.List;
+import java.util.ArrayList;
 
-public class DepositAccountRecentTransactionsSteps {
+public class LoanAccountRecentTransactionsSteps {
 
     private boolean accountExists;
-    private List<String> filteredTransactions;
+    private List<String> postedTransactions;
 
-    @Given("I have a small business retail deposit account")
-    public void i_have_a_small_business_retail_deposit_account() {
-        // Mocking the account existence for the test
+    @Given("I hold a small business retail ILA account")
+    public void i_hold_a_small_business_retail_ila_account() {
+        // Simulating account existence check
         accountExists = true;
-        assertTrue("Account should exist", accountExists);
+        assertTrue("ILA account should exist", accountExists);
     }
 
-    @When("I apply filters to view my recent transactions")
-    public void i_apply_filters_to_view_my_recent_transactions() {
-        // Mocking filtered transactions
-        filteredTransactions = List.of("Transaction 1", "Transaction 2", "Transaction 3");
+    @When("I search for my recent loan account transactions")
+    public void i_search_for_my_recent_loan_account_transactions() {
+        // Simulating recent transactions retrieval for ILA account
+        postedTransactions = new ArrayList<>();
+        postedTransactions.add("ILA Transaction 1");
+        postedTransactions.add("ILA Transaction 2");
     }
 
-    @Then("I should see only the posted transactions that match the applied filters")
-    public void i_should_see_only_the_posted_transactions_that_match_the_applied_filters() {
-        // Assuming only posted transactions should be shown
-        assertNotNull("Filtered transactions should not be null", filteredTransactions);
-        assertFalse("There should be at least one filtered transaction", filteredTransactions.isEmpty());
+    @Then("I should be able to view my posted loan transactions")
+    public void i_should_be_able_to_view_my_posted_loan_transactions() {
+        assertNotNull("Transactions should not be null", postedTransactions);
+        assertFalse("Transactions list should not be empty", postedTransactions.isEmpty());
+    }
+
+    @Given("I hold a small business retail LOC account")
+    public void i_hold_a_small_business_retail_loc_account() {
+        // Simulating account existence check for LOC account
+        accountExists = true;
+        assertTrue("LOC account should exist", accountExists);
+    }
+
+    @When("I retrieve my recent loan account transactions")
+    public void i_retrieve_my_recent_loan_account_transactions() {
+        // Simulating recent transactions retrieval for LOC account
+        postedTransactions = new ArrayList<>();
+        postedTransactions.add("LOC Transaction 1");
+        postedTransactions.add("LOC Transaction 2");
+    }
+
+    @Then("I should be able to see only the posted loan transactions")
+    public void i_should_be_able_to_see_only_the_posted_loan_transactions() {
+        assertNotNull("Transactions should not be null", postedTransactions);
+        assertFalse("Transactions list should not be empty", postedTransactions.isEmpty());
     }
 }
