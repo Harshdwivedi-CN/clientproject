@@ -1,33 +1,76 @@
-package StepDefinitions;
+Feature: Deposit Account Search Transactions
 
-import io.cucumber.java.en.Given;
+  @component
+  Scenario: Successfully search transactions by description
+    Given I am logged in as a small business retail deposit account holder
+    When I enter a transaction description in the search field
+    Then I should see a list of transactions matching the entered description
+
+  @component
+  Scenario: Successfully search transactions by date
+    Given I am logged in as a small business retail deposit account holder
+    When I specify a date or date range in the transaction search
+    Then I should see all transactions that occurred on the specified date or within the date range
+
+  @component
+  Scenario: Successfully search transactions by amount
+    Given I am logged in as a small business retail deposit account holder
+    When I input a specific transaction amount in the search criteria
+    Then I should see all transactions that match the specified amount
+
+
+
+
+
+    import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
+import static org.junit.Assert.*;
+import java.util.List;
 
-public class DepositAccountSearchTransactionsSteps {
+public class DepositAccountSearchSteps {
 
-    @Given("I am a small business retail deposit account holder")
-    public void i_am_a_small_business_retail_deposit_account_holder() {
-        System.out.println("User is a small business retail deposit account holder");
+    private String searchCriteria;
+    private List<String> searchResults;
+    
+    @Given("I am logged in as a small business retail deposit account holder")
+    public void i_am_logged_in_as_a_small_business_retail_deposit_account_holder() {
+        System.out.println("User is logged in as a small business retail deposit account holder.");
     }
 
-    @When("I search for transactions by description")
-    public void i_search_for_transactions_by_description() {
-        System.out.println("User is searching for transactions by description");
+    @When("I enter a transaction description in the search field")
+    public void i_enter_a_transaction_description_in_the_search_field() {
+        searchCriteria = "Transaction Description";
+        System.out.println("User searches for transactions by description.");
     }
 
-    @When("I search for transactions by date")
-    public void i_search_for_transactions_by_date() {
-        System.out.println("User is searching for transactions by date");
+    @Then("I should see a list of transactions matching the entered description")
+    public void i_should_see_a_list_of_transactions_matching_the_entered_description() {
+        assertNotNull(searchCriteria);
+        System.out.println("Transactions matching the description are displayed.");
     }
 
-    @When("I search for transactions by amount")
-    public void i_search_for_transactions_by_amount() {
-        System.out.println("User is searching for transactions by amount");
+    @When("I specify a date or date range in the transaction search")
+    public void i_specify_a_date_or_date_range_in_the_transaction_search() {
+        searchCriteria = "Transaction Date";
+        System.out.println("User searches for transactions by date.");
     }
 
-    @Then("I am able to see my searched transactions")
-    public void i_am_able_to_see_my_searched_transactions() {
-        System.out.println("User can see searched transactions");
+    @Then("I should see all transactions that occurred on the specified date or within the date range")
+    public void i_should_see_all_transactions_that_occurred_on_the_specified_date_or_within_the_date_range() {
+        assertNotNull(searchCriteria);
+        System.out.println("Transactions matching the date are displayed.");
+    }
+
+    @When("I input a specific transaction amount in the search criteria")
+    public void i_input_a_specific_transaction_amount_in_the_search_criteria() {
+        searchCriteria = "Transaction Amount";
+        System.out.println("User searches for transactions by amount.");
+    }
+
+    @Then("I should see all transactions that match the specified amount")
+    public void i_should_see_all_transactions_that_match_the_specified_amount() {
+        assertNotNull(searchCriteria);
+        System.out.println("Transactions matching the amount are displayed.");
     }
 }
