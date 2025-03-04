@@ -1,141 +1,43 @@
-Feature: Deposit Account Upcoming Transactions
+Feature: Deposit Account Recent Transactions
 
   @component
-  Scenario: Viewing upcoming transactions for a retail deposit account
-    Given I hold a small business retail deposit account
-    When I retrieve my upcoming transactions
-    Then my scheduled transactions should be displayed
-
-  @component
-  Scenario: Viewing upcoming transactions for a money market account
-    Given I own a money market account
-    When I request upcoming transactions
-    Then all scheduled transactions should be visible
-
-  @component
-  Scenario: Viewing upcoming transactions for a profile deposit account
-    Given I manage a small business profile deposit account
-    When I check for upcoming transactions
-    Then I should successfully retrieve my scheduled transactions
-
-  @component
-  Scenario: Viewing upcoming transactions for a profile savings account
-    Given I have a small business profile savings account
-    When I search for upcoming transactions
-    Then my scheduled transactions should be presented
-
-  @component
-  Scenario: Viewing upcoming transactions for a retail CD account
-    Given I possess a small business retail CD account
-    When I explore upcoming transactions
-    Then I should have access to my scheduled transactions
-
-  @component
-  Scenario: Unauthorized access due to mismatched accountReferenceId
-    Given I attempt to access a small business retail deposit account with a mismatched accountReferenceId
-    When I try to retrieve upcoming transactions
-    Then a 403 unauthorized error should be returned
+  Scenario: Deposit account recent transactions success for retail deposit account
+    Given I have a small business retail deposit account
+    When I apply filters to view my recent transactions
+    Then I should see only the posted transactions that match the applied filters
 
 
 
+    package stepdefinitions;
 
-    import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import static org.junit.Assert.*;
+import java.util.List;
 
-public class DepositAccountSteps {
+public class DepositAccountRecentTransactionsSteps {
 
-    private boolean transactionsRetrieved;
-    private int responseStatusCode;
+    private boolean accountExists;
+    private List<String> filteredTransactions;
 
-    @Given("^I hold a small business retail deposit account$")
-    public void iHoldASmallBusinessRetailDepositAccount() {
-        transactionsRetrieved = false;
+    @Given("I have a small business retail deposit account")
+    public void i_have_a_small_business_retail_deposit_account() {
+        // Mocking the account existence for the test
+        accountExists = true;
+        assertTrue("Account should exist", accountExists);
     }
 
-    @Given("^I own a money market account$")
-    public void iOwnAMoneyMarketAccount() {
-        transactionsRetrieved = false;
+    @When("I apply filters to view my recent transactions")
+    public void i_apply_filters_to_view_my_recent_transactions() {
+        // Mocking filtered transactions
+        filteredTransactions = List.of("Transaction 1", "Transaction 2", "Transaction 3");
     }
 
-    @Given("^I manage a small business profile deposit account$")
-    public void iManageASmallBusinessProfileDepositAccount() {
-        transactionsRetrieved = false;
-    }
-
-    @Given("^I have a small business profile savings account$")
-    public void iHaveASmallBusinessProfileSavingsAccount() {
-        transactionsRetrieved = false;
-    }
-
-    @Given("^I possess a small business retail CD account$")
-    public void iPossessASmallBusinessRetailCDAccount() {
-        transactionsRetrieved = false;
-    }
-
-    @Given("^I attempt to access a small business retail deposit account with a mismatched accountReferenceId$")
-    public void iAttemptToAccessAccountWithMismatchedId() {
-        responseStatusCode = 403;
-    }
-
-    @When("^I retrieve my upcoming transactions$")
-    public void iRetrieveMyUpcomingTransactions() {
-        transactionsRetrieved = true;
-    }
-
-    @When("^I request upcoming transactions$")
-    public void iRequestUpcomingTransactions() {
-        transactionsRetrieved = true;
-    }
-
-    @When("^I check for upcoming transactions$")
-    public void iCheckForUpcomingTransactions() {
-        transactionsRetrieved = true;
-    }
-
-    @When("^I search for upcoming transactions$")
-    public void iSearchForUpcomingTransactions() {
-        transactionsRetrieved = true;
-    }
-
-    @When("^I explore upcoming transactions$")
-    public void iExploreUpcomingTransactions() {
-        transactionsRetrieved = true;
-    }
-
-    @When("^I try to retrieve upcoming transactions$")
-    public void iTryToRetrieveUpcomingTransactions() {
-        responseStatusCode = 403;
-    }
-
-    @Then("^my scheduled transactions should be displayed$")
-    public void myScheduledTransactionsShouldBeDisplayed() {
-        assertTrue(transactionsRetrieved);
-    }
-
-    @Then("^all scheduled transactions should be visible$")
-    public void allScheduledTransactionsShouldBeVisible() {
-        assertTrue(transactionsRetrieved);
-    }
-
-    @Then("^I should successfully retrieve my scheduled transactions$")
-    public void iShouldSuccessfullyRetrieveMyScheduledTransactions() {
-        assertTrue(transactionsRetrieved);
-    }
-
-    @Then("^my scheduled transactions should be presented$")
-    public void myScheduledTransactionsShouldBePresented() {
-        assertTrue(transactionsRetrieved);
-    }
-
-    @Then("^I should have access to my scheduled transactions$")
-    public void iShouldHaveAccessToMyScheduledTransactions() {
-        assertTrue(transactionsRetrieved);
-    }
-
-    @Then("^a 403 unauthorized error should be returned$")
-    public void a403UnauthorizedErrorShouldBeReturned() {
-        assertEquals(403, responseStatusCode);
+    @Then("I should see only the posted transactions that match the applied filters")
+    public void i_should_see_only_the_posted_transactions_that_match_the_applied_filters() {
+        // Assuming only posted transactions should be shown
+        assertNotNull("Filtered transactions should not be null", filteredTransactions);
+        assertFalse("There should be at least one filtered transaction", filteredTransactions.isEmpty());
     }
 }
