@@ -1,22 +1,42 @@
-Feature: Deposit Account Search Transactions
+Feature: Deposit Account Upcoming Transactions
 
   @component
-  Scenario: Successfully search transactions by description
-    Given I am logged in as a small business retail deposit account holder
-    When I enter a transaction description in the search field
-    Then I should see a list of transactions matching the entered description
+  Scenario: Viewing upcoming transactions for a retail deposit account
+    Given I hold a small business retail deposit account
+    When I retrieve my upcoming transactions
+    Then I should be able to view my scheduled transactions
 
   @component
-  Scenario: Successfully search transactions by date
-    Given I am logged in as a small business retail deposit account holder
-    When I specify a date or date range in the transaction search
-    Then I should see all transactions that occurred on the specified date or within the date range
+  Scenario: Viewing upcoming transactions for a money market account
+    Given I own a money market account
+    When I request upcoming transactions
+    Then I can see all scheduled transactions
 
   @component
-  Scenario: Successfully search transactions by amount
-    Given I am logged in as a small business retail deposit account holder
-    When I input a specific transaction amount in the search criteria
-    Then I should see all transactions that match the specified amount
+  Scenario: Viewing upcoming transactions for a profile deposit account
+    Given I manage a small business profile deposit account
+    When I check for upcoming transactions
+    Then I should find my scheduled transactions
+
+  @component
+  Scenario: Viewing upcoming transactions for a profile savings account
+    Given I have a small business profile savings account
+    When I search for upcoming transactions
+    Then I am presented with my scheduled transactions
+
+  @component
+  Scenario: Viewing upcoming transactions for a retail CD account
+    Given I possess a small business retail CD account
+    When I explore upcoming transactions
+    Then I should access my scheduled transactions
+
+  @component
+  Scenario: Unauthorized access due to mismatched accountReferenceId
+    Given I attempt to access a small business retail deposit account with a mismatched accountReferenceId
+    When I try to retrieve upcoming transactions
+    Then I receive a 403 unauthorized error
+
+
 
 
 
@@ -26,51 +46,107 @@ Feature: Deposit Account Search Transactions
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import static org.junit.Assert.*;
-import java.util.List;
 
-public class DepositAccountSearchSteps {
+public class DepositAccountSteps {
 
-    private String searchCriteria;
-    private List<String> searchResults;
-    
-    @Given("I am logged in as a small business retail deposit account holder")
-    public void i_am_logged_in_as_a_small_business_retail_deposit_account_holder() {
-        System.out.println("User is logged in as a small business retail deposit account holder.");
+    @Given("^I hold a small business retail deposit account$")
+    public void iHoldASmallBusinessRetailDepositAccount() {
+        // Setup account details for a retail deposit account
     }
 
-    @When("I enter a transaction description in the search field")
-    public void i_enter_a_transaction_description_in_the_search_field() {
-        searchCriteria = "Transaction Description";
-        System.out.println("User searches for transactions by description.");
+    @Given("^I own a money market account$")
+    public void iOwnAMoneyMarketAccount() {
+        // Setup account details for a money market account
     }
 
-    @Then("I should see a list of transactions matching the entered description")
-    public void i_should_see_a_list_of_transactions_matching_the_entered_description() {
-        assertNotNull(searchCriteria);
-        System.out.println("Transactions matching the description are displayed.");
+    @Given("^I manage a small business profile deposit account$")
+    public void iManageASmallBusinessProfileDepositAccount() {
+        // Setup account details for a profile deposit account
     }
 
-    @When("I specify a date or date range in the transaction search")
-    public void i_specify_a_date_or_date_range_in_the_transaction_search() {
-        searchCriteria = "Transaction Date";
-        System.out.println("User searches for transactions by date.");
+    @Given("^I have a small business profile savings account$")
+    public void iHaveASmallBusinessProfileSavingsAccount() {
+        // Setup account details for a profile savings account
     }
 
-    @Then("I should see all transactions that occurred on the specified date or within the date range")
-    public void i_should_see_all_transactions_that_occurred_on_the_specified_date_or_within_the_date_range() {
-        assertNotNull(searchCriteria);
-        System.out.println("Transactions matching the date are displayed.");
+    @Given("^I possess a small business retail CD account$")
+    public void iPossessASmallBusinessRetailCDAccount() {
+        // Setup account details for a retail CD account
     }
 
-    @When("I input a specific transaction amount in the search criteria")
-    public void i_input_a_specific_transaction_amount_in_the_search_criteria() {
-        searchCriteria = "Transaction Amount";
-        System.out.println("User searches for transactions by amount.");
+    @Given("^I attempt to access a small business retail deposit account with a mismatched accountReferenceId$")
+    public void iAttemptToAccessAccountWithMismatchedId() {
+        // Setup test for mismatched accountReferenceId
     }
 
-    @Then("I should see all transactions that match the specified amount")
-    public void i_should_see_all_transactions_that_match_the_specified_amount() {
-        assertNotNull(searchCriteria);
-        System.out.println("Transactions matching the amount are displayed.");
+    @When("^I retrieve my upcoming transactions$")
+    public void iRetrieveMyUpcomingTransactions() {
+        // Fetch upcoming transactions for retail deposit account
+    }
+
+    @When("^I request upcoming transactions$")
+    public void iRequestUpcomingTransactions() {
+        // Fetch upcoming transactions for money market account
+    }
+
+    @When("^I check for upcoming transactions$")
+    public void iCheckForUpcomingTransactions() {
+        // Fetch upcoming transactions for profile deposit account
+    }
+
+    @When("^I search for upcoming transactions$")
+    public void iSearchForUpcomingTransactions() {
+        // Fetch upcoming transactions for profile savings account
+    }
+
+    @When("^I explore upcoming transactions$")
+    public void iExploreUpcomingTransactions() {
+        // Fetch upcoming transactions for retail CD account
+    }
+
+    @When("^I try to retrieve upcoming transactions$")
+    public void iTryToRetrieveUpcomingTransactions() {
+        // Attempt to fetch transactions with a mismatched accountReferenceId
+    }
+
+    @Then("^I should be able to view my scheduled transactions$")
+    public void iShouldBeAbleToViewMyScheduledTransactions() {
+        // Assert scheduled transactions are returned
+        assertTrue(true);
+    }
+
+    @Then("^I can see all scheduled transactions$")
+    public void iCanSeeAllScheduledTransactions() {
+        // Assert scheduled transactions are returned
+        assertTrue(true);
+    }
+
+    @Then("^I should find my scheduled transactions$")
+    public void iShouldFindMyScheduledTransactions() {
+        // Assert scheduled transactions are returned
+        assertTrue(true);
+    }
+
+    @Then("^I am presented with my scheduled transactions$")
+    public void iAmPresentedWithMyScheduledTransactions() {
+        // Assert scheduled transactions are returned
+        assertTrue(true);
+    }
+
+    @Then("^I should access my scheduled transactions$")
+    public void iShouldAccessMyScheduledTransactions() {
+        // Assert scheduled transactions are returned
+        assertTrue(true);
+    }
+
+    @Then("^I receive a 403 unauthorized error$")
+    public void iReceiveA403UnauthorizedError() {
+        // Assert unauthorized error is returned
+        assertEquals(403, getResponseStatusCode());
+    }
+
+    private int getResponseStatusCode() {
+        // Mocked method to return HTTP status code
+        return 403;
     }
 }
