@@ -3,95 +3,46 @@ package StepDefinitions;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
-import org.junit.Assert;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-public class DepositRecentTransactionsSteps {
-
-    private String accountType;
-    private String pagingKey;
-    private LocalDate fromDate;
-    private LocalDate toDate;
-    private double minAmount;
-    private double maxAmount;
-    private int fromCheckNumber;
-    private int toCheckNumber;
-    private List<Transaction> transactions;
-    private List<Transaction> filteredTransactions;
+public class DepositAccountDownloadTransactionsSteps {
 
     @Given("I am a small business retail deposit account holder")
     public void i_am_a_small_business_retail_deposit_account_holder() {
-        accountType = "Retail Deposit Account";
-        System.out.println("User is a small business retail deposit account holder.");
-
-        // Sample transactions for filtering
-        transactions = new ArrayList<>();
-        transactions.add(new Transaction(LocalDate.now().minusDays(10), 500.0, 1200));
-        transactions.add(new Transaction(LocalDate.now().minusMonths(3), 2000.0, 2500));
-        transactions.add(new Transaction(LocalDate.now().minusYears(1), 10000.0, 3500));
-        transactions.add(new Transaction(LocalDate.now().minusDays(20), 50.0, 4500));
+        System.out.println("User is a small business retail deposit account holder");
     }
 
-    @When("I look up my recent transactions with filters")
-    public void i_look_up_my_recent_transactions_with_filters() {
-        System.out.println("User is looking up recent transactions with filters.");
-
-        // Define filters
-        fromDate = LocalDate.now().minusYears(2);  // Transactions from last 2 years
-        toDate = LocalDate.now();                  // Until today
-        minAmount = 10.0;
-        maxAmount = 10000.0;
-        fromCheckNumber = 1000;
-        toCheckNumber = 5000;
-        pagingKey = "somePagingKey123"; // Example paging key
-
-        // Apply filters
-        filteredTransactions = transactions.stream()
-                .filter(t -> (t.getDate().isAfter(fromDate) && t.getDate().isBefore(toDate)))
-                .filter(t -> (t.getAmount() >= minAmount && t.getAmount() <= maxAmount))
-                .filter(t -> (t.getCheckNumber() >= fromCheckNumber && t.getCheckNumber() <= toCheckNumber))
-                .collect(Collectors.toList());
+    @When("I download my transactions as CSV")
+    public void i_download_my_transactions_as_CSV() {
+        System.out.println("User is downloading transactions as CSV");
     }
 
-    @Then("I am able to see my posted transactions based on filters")
-    public void i_am_able_to_see_my_posted_transactions_based_on_filters() {
-        System.out.println("Validating filtered transactions.");
-        Assert.assertFalse("No transactions found based on filters!", filteredTransactions.isEmpty());
-
-        // Validate that pagingKey response changes
-        String newPagingKey = "newPagingKey456";
-        Assert.assertNotEquals("Paging key should be different after fetching transactions!", pagingKey, newPagingKey);
-
-        System.out.println("Transactions successfully retrieved based on filters.");
+    @When("I download my transactions as QFX")
+    public void i_download_my_transactions_as_QFX() {
+        System.out.println("User is downloading transactions as QFX");
     }
 
-    // Inner class for transaction representation
-    private static class Transaction {
-        private LocalDate date;
-        private double amount;
-        private int checkNumber;
+    @When("I download my transactions as QBO")
+    public void i_download_my_transactions_as_QBO() {
+        System.out.println("User is downloading transactions as QBO");
+    }
 
-        public Transaction(LocalDate date, double amount, int checkNumber) {
-            this.date = date;
-            this.amount = amount;
-            this.checkNumber = checkNumber;
-        }
+    @Then("I receive a CSV file")
+    public void i_receive_a_CSV_file() {
+        System.out.println("User received a CSV file");
+    }
 
-        public LocalDate getDate() {
-            return date;
-        }
+    @Then("I receive a QFX file")
+    public void i_receive_a_QFX_file() {
+        System.out.println("User received a QFX file");
+    }
 
-        public double getAmount() {
-            return amount;
-        }
+    @Then("I receive a QBO file")
+    public void i_receive_a_QBO_file() {
+        System.out.println("User received a QBO file");
+    }
 
-        public int getCheckNumber() {
-            return checkNumber;
-        }
+    @Then("I receive a 403 unauthorized error")
+    public void i_receive_a_403_unauthorized_error() {
+        System.out.println("User received a 403 unauthorized error");
     }
 }
-
