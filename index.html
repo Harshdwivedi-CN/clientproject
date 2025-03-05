@@ -1,55 +1,37 @@
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
-import java.util.logging.Logger;
-import static io.restassured.RestAssured.*;
+import io.cucumber.java.en.When;
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class DepositAccountSteps {
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
-    private static final Logger logger = Logger.getLogger(DepositAccountSteps.class.getName());
+public class SBBTransactionTest {
+    private static final Logger logger = LogManager.getLogger(SBBTransactionTest.class);
     private Response response;
+    private static final String BASE_URL = "https://api.example.com/sbb"; // Replace with actual URL
 
-    @Given("I am a small business retail deposit account holder")
-    public void i_am_a_small_business_retail_deposit_account_holder() {
-        logger.info("User is a small business retail deposit account holder");
+    @Given("the function was deployed")
+    public void the_function_was_deployed() {
+        logger.info("Verifying that the function is deployed.");
     }
 
-    @When("I download my transactions as {string}")
-    public void i_download_my_transactions_as(String format) {
-        logger.info("User is downloading transactions as " + format);
-        response = given()
-                    .header("Authorization", "Bearer YOUR_TOKEN")
-                    .queryParam("format", format)
-                  .when()
-                    .get("https://api.yourbank.com/transactions/download");
+    @When("the function is invoked")
+    public void the_function_is_invoked() {
+        response = RestAssured.given()
+                .header("Content-Type", "application/json")
+                .when()
+                .get(BASE_URL + "/target-function"); // Replace with actual endpoint
+        
+        logger.info("Function invoked. Response status: {}", response.getStatusCode());
     }
 
-    @When("I search for transactions by {string} with value {string}")
-    public void i_search_for_transactions_by(String criteria, String value) {
-        logger.info("User is searching for transactions by " + criteria + " with value " + value);
-        response = given()
-                    .header("Authorization", "Bearer YOUR_TOKEN")
-                    .queryParam(criteria, value)
-                  .when()
-                    .get("https://api.yourbank.com/transactions/search");
-    }
-
-    @Then("I receive a {string} file")
-    public void i_receive_a_file(String format) {
-        logger.info("User received a " + format + " file");
-        response.then().statusCode(200);
-    }
-
-    @Then("I receive a 403 unauthorized error")
-    public void i_receive_a_403_unauthorized_error() {
-        logger.warning("User received a 403 unauthorized error");
-        response.then().statusCode(403);
-    }
-
-    @Then("I am able to see my searched transactions")
-    public void i_am_able_to_see_my_searched_transactions() {
-        logger.info("User can see searched transactions");
-        response.then().statusCode(200);
+    @Then("the function returns a successful response")
+    public void the_function_returns_a_successful_response() {
+        assertThat("Response status is not 200", response.getStatusCode(), equalTo(200));
+        logger.info("Function executed successfully. Response: {}", response.getBody().asString());
     }
 }
