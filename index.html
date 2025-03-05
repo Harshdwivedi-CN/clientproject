@@ -1,46 +1,55 @@
-package StepDefinitions;
-
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import java.util.logging.Logger;
+import static io.restassured.RestAssured.*;
+import io.restassured.response.Response;
 
-public class DepositAccountSearchTransactionsSteps {
+public class DepositAccountSteps {
 
-    private static final Logger logger = Logger.getLogger(DepositAccountSearchTransactionsSteps.class.getName());
+    private static final Logger logger = Logger.getLogger(DepositAccountSteps.class.getName());
+    private Response response;
 
-    @Given("I am logged in as a small business retail deposit account holder")
-    public void i_am_logged_in_as_a_small_business_retail_deposit_account_holder() {
-        logger.info("User is logged in as a small business retail deposit account holder");
+    @Given("I am a small business retail deposit account holder")
+    public void i_am_a_small_business_retail_deposit_account_holder() {
+        logger.info("User is a small business retail deposit account holder");
     }
 
-    @When("Lentera transaction description in the search field")
-    public void lentera_transaction_description_in_the_search_field() {
-        logger.info("User is searching for transactions by description");
+    @When("I download my transactions as {string}")
+    public void i_download_my_transactions_as(String format) {
+        logger.info("User is downloading transactions as " + format);
+        response = given()
+                    .header("Authorization", "Bearer YOUR_TOKEN")
+                    .queryParam("format", format)
+                  .when()
+                    .get("https://api.yourbank.com/transactions/download");
     }
 
-    @Then("I should see a list of transactions matching the entered description")
-    public void i_should_see_a_list_of_transactions_matching_the_entered_description() {
-        logger.info("User sees a list of transactions matching the description");
+    @When("I search for transactions by {string} with value {string}")
+    public void i_search_for_transactions_by(String criteria, String value) {
+        logger.info("User is searching for transactions by " + criteria + " with value " + value);
+        response = given()
+                    .header("Authorization", "Bearer YOUR_TOKEN")
+                    .queryParam(criteria, value)
+                  .when()
+                    .get("https://api.yourbank.com/transactions/search");
     }
 
-    @When("I specify a date or date range in the transaction search")
-    public void i_specify_a_date_or_date_range_in_the_transaction_search() {
-        logger.info("User is searching for transactions by date or date range");
+    @Then("I receive a {string} file")
+    public void i_receive_a_file(String format) {
+        logger.info("User received a " + format + " file");
+        response.then().statusCode(200);
     }
 
-    @Then("I should see all transactions that occurred on the specified date or within the date range")
-    public void i_should_see_all_transactions_that_occurred_on_the_specified_date_or_within_the_date_range() {
-        logger.info("User sees all transactions for the specified date range");
+    @Then("I receive a 403 unauthorized error")
+    public void i_receive_a_403_unauthorized_error() {
+        logger.warning("User received a 403 unauthorized error");
+        response.then().statusCode(403);
     }
 
-    @When("I input a specific transaction amount in the search criteria")
-    public void i_input_a_specific_transaction_amount_in_the_search_criteria() {
-        logger.info("User is searching for transactions by amount");
-    }
-
-    @Then("I should see all transactions that match the specified amount")
-    public void i_should_see_all_transactions_that_match_the_specified_amount() {
-        logger.info("User sees all transactions matching the specified amount");
+    @Then("I am able to see my searched transactions")
+    public void i_am_able_to_see_my_searched_transactions() {
+        logger.info("User can see searched transactions");
+        response.then().statusCode(200);
     }
 }
