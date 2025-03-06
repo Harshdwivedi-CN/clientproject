@@ -1,463 +1,59 @@
-<!-- DepositAccountSearchTransactions -->
+package stepDefinitions;
 
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
-import static org.junit.Assert.*;
+import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import static io.restassured.RestAssured.*;
 
-public class DepositAccountSearchTransactions {
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+
+public class SmokeStepDefinitions {
+
+    private static final String ACC_ID = "1688745";
+    private static final String ACC_REF_ID = "jg5mFCxvS9%2BsoKzXLPONREX2BzFK0mWFGNu16UZjjybk6EX30";
+    private static final String ENV = "https://localhost:8443/private/";
+    private static final String SBB_PATH = "/small-business/accounts/";
+    private static final String URL_CONTD = "/transactions/download";
+
     private Response response;
-    
-    @Given("I am logged in as a small business retail deposit account holder")
-    public void iAmLoggedInAsSmallBusinessRetailDepositAccountHolder() {
-        // Code to simulate login process
-        print("User is logged in as a small business retail deposit account holder");
+
+    @Given("the function was deployed")
+    public void the_function_was_deployed() {
+        System.out.println("Verifying that the function is deployed.");
     }
-    
-    @When("I enter a transaction description in the search field")
-    public void iEnterTransactionDescription() {
-        response = given()
-            .queryParam("description", "Sample Description")
-            .when()
-            .get("/api/transactions/search");
-        print("User enters a transaction description in the search field");
+
+    @When("the function is invoked")
+    public void the_function_is_invoked() {
+        String payload = "{"
+                + "\"accountNumberLastFour\": \"4284\","
+                + "\"bankRoutingNumber\": \"865000090\","
+                + "\"fileType\": \"CSV\","
+                + "\"LedgerBalance\": \"422227\","
+                + "\"startDate\": \"2024-08-02\","
+                + "\"endDate\": \"2024-10-31\","
+                + "\"accountCategory\": \"CHECKING\","
+                + "\"accountType\": \"CHECKING\""
+                + "}";
+
+        response = RestAssured.given()
+                .relaxedHTTPSValidation()
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .header("Client-Correlation-Id", "SbbTest123")
+                .header("profileReferenceId", "rd56DeD6/Hn9J0BYuktgkLzXP3Lw5Yz1QlVnnTmJ39UhFdgg30EBJjHfBm0NrkW/NxLWO8ygmd011hSRrzgy43/RAmirdLHyy6@FOGV0/1s=")
+                .body(payload)
+                .when()
+                .post(ENV + ACC_ID + SBB_PATH + ACC_REF_ID + URL_CONTD);
+
+        System.out.println("Function invoked. URL: " + (ENV + ACC_ID + SBB_PATH + ACC_REF_ID + URL_CONTD) 
+            + " Response status: " + response.getStatusCode());
     }
-    
-    @Then("I should see a list of transactions matching the entered description")
-    public void iShouldSeeTransactionsMatchingDescription() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        print("Transactions matching the description are displayed");
-    }
-    
-    @When("I specify a date or date range in the transaction search")
-    public void iSpecifyDateOrDateRange() {
-        response = given()
-            .queryParam("startDate", "2024-01-01")
-            .queryParam("endDate", "2024-02-01")
-            .when()
-            .get("/api/transactions/search");
-        print("User specifies a date or date range in the search");
-    }
-    
-    @Then("I should see all transactions that occurred on the specified date or within the date range")
-    public void iShouldSeeTransactionsForSpecifiedDateRange() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        print("Transactions for the specified date or date range are displayed");
-    }
-    
-    @When("I input a specific transaction amount in the search criteria")
-    public void iInputSpecificTransactionAmount() {
-        response = given()
-            .queryParam("amount", "100.00")
-            .when()
-            .get("/api/transactions/search");
-        print("User inputs a specific transaction amount in the search");
-    }
-    
-    @Then("I should see all transactions that match the specified amount")
-    public void iShouldSeeTransactionsMatchingAmount() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        print("Transactions matching the specified amount are displayed");
+
+    @Then("the function returns a successful response")
+    public void the_function_returns_a_successful_response() {
+        assertThat("Response status is not 200", response.getStatusCode(), equalTo(200));
+        System.out.println("Function executed successfully. Response: " + response.getBody().asString());
     }
 }
-
-
-<!-- DepositAccountDownloadTransactions -->
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import static org.junit.Assert.*;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import static io.restassured.RestAssured.*;
-
-public class DepositAccountDownloadTransactions {
-    private Response response;
-    
-    @Given("I am a small business retail deposit account holder")
-    public void iAmSmallBusinessRetailDepositAccountHolder() {
-        print("User is logged in as a small business retail deposit account holder");
-    }
-    
-    @When("I download my transactions as CSV")
-    public void iDownloadTransactionsAsCSV() {
-        response = given()
-            .when()
-            .get("/api/transactions/download/csv");
-        print("User downloads transactions as CSV");
-    }
-    
-    @Then("I receive a CSV file")
-    public void iReceiveCSVFile() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        assertTrue(response.getHeader("Content-Type").contains("csv"));
-        print("CSV file received successfully");
-    }
-    
-    @When("I download my transactions as QFX")
-    public void iDownloadTransactionsAsQFX() {
-        response = given()
-            .when()
-            .get("/api/transactions/download/qfx");
-        print("User downloads transactions as QFX");
-    }
-    
-    @Then("I receive a QFX file")
-    public void iReceiveQFXFile() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        assertTrue(response.getHeader("Content-Type").contains("qfx"));
-        print("QFX file received successfully");
-    }
-    
-    @When("I download my transactions as 000")
-    public void iDownloadTransactionsAs000() {
-        response = given()
-            .when()
-            .get("/api/transactions/download/000");
-        print("User downloads transactions as 000");
-    }
-    
-    @Then("I receive a 000 file")
-    public void iReceive000File() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        assertTrue(response.getHeader("Content-Type").contains("000"));
-        print("000 file received successfully");
-    }
-    
-    @When("I download my transactions as CSV with mismatched accountReferenceId")
-    public void iDownloadTransactionsWithMismatchedAccountReferenceId() {
-        response = given()
-            .queryParam("accountReferenceId", "invalid123")
-            .when()
-            .get("/api/transactions/download/csv");
-        print("User attempts to download transactions with mismatched accountReferenceId");
-    }
-    
-    @Then("I receive a 403 unauthorized error")
-    public void iReceiveUnauthorizedError() {
-        assertNotNull(response);
-        assertEquals(403, response.getStatusCode());
-        print("403 Unauthorized error received");
-    }
-}
-
-
-
-
-<!-- DepositRecentTransactions -->
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import static org.junit.Assert.*;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import static io.restassured.RestAssured.*;
-
-public class DepositRecentTransactions {
-    private Response response;
-    
-    @Given("I have a small business retail deposit account")
-    public void iHaveSmallBusinessRetailDepositAccount() {
-        print("User has a small business retail deposit account");
-    }
-    
-    @When("I apply filters to view my recent transactions")
-    public void iApplyFiltersToViewRecentTransactions() {
-        response = given()
-            .queryParam("filter", "posted")
-            .when()
-            .get("/api/transactions/recent");
-        print("User applies filters to view recent transactions");
-    }
-    
-    @Then("I should see only the posted transactions that match the applied filters")
-    public void iShouldSeeOnlyPostedTransactions() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        assertTrue(response.getBody().asString().contains("posted"));
-        print("Only posted transactions matching the filters are displayed");
-    }
-}
-
-
-
-<!-- DepositTransactions -->
-
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import static org.junit.Assert.*;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import static io.restassured.RestAssured.*;
-
-public class DepositTransactions {
-    private Response response;
-    
-    @Given("my account type is a small business retail deposit account")
-    public void myRetailDepositAccount() {
-        print("User has a small business retail deposit account");
-    }
-    
-    @When("I request a list of recent transactions for my retail deposit account")
-    public void iRequestRecentRetailTransactions() {
-        response = given().when().get("/api/transactions/recent/retail");
-        print("User requests recent transactions for retail deposit account");
-    }
-    
-    @Then("I should receive the posted transactions for my retail deposit account")
-    public void iReceiveRetailPostedTransactions() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        assertTrue(response.getBody().asString().contains("posted"));
-        print("Posted transactions for retail deposit account received");
-    }
-    
-    @Given("I am a verified holder of a money market deposit account")
-    public void iHaveMoneyMarketAccount() {
-        print("User has a verified money market deposit account");
-    }
-    
-    @When("I review my recent transactions for my money market account")
-    public void iReviewMoneyMarketTransactions() {
-        response = given().when().get("/api/transactions/recent/moneymarket");
-        print("User reviews recent money market transactions");
-    }
-    
-    @Then("I should be able to see my posted money market transactions")
-    public void iSeeMoneyMarketTransactions() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        assertTrue(response.getBody().asString().contains("posted"));
-        print("Posted transactions for money market account displayed");
-    }
-    
-    @Given("my profile deposit account is registered under small business banking")
-    public void myProfileDepositAccount() {
-        print("User has a profile deposit account under small business banking");
-    }
-    
-    @When("I apply filters to view my recent profile deposit transactions")
-    public void iApplyFiltersProfileDepositTransactions() {
-        response = given().queryParam("filter", "posted").when().get("/api/transactions/recent/profile");
-        print("User applies filters for profile deposit transactions");
-    }
-    
-    @Then("I should get my filtered posted transactions for my profile deposit account")
-    public void iSeeProfileDepositTransactions() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        assertTrue(response.getBody().asString().contains("posted"));
-        print("Filtered posted transactions for profile deposit account received");
-    }
-    
-    @Given("my small business profile savings account is active")
-    public void myProfileSavingsAccount() {
-        print("User has an active small business profile savings account");
-    }
-    
-    @When("I retrieve the latest transactions from my profile savings account")
-    public void iRetrieveProfileSavingsTransactions() {
-        response = given().when().get("/api/transactions/recent/profilesavings");
-        print("User retrieves latest transactions for profile savings account");
-    }
-    
-    @Then("I should successfully view my posted transactions for my profile savings account")
-    public void iSeeProfileSavingsTransactions() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        assertTrue(response.getBody().asString().contains("posted"));
-        print("Posted transactions for profile savings account displayed");
-    }
-    
-    @Given("I have an active small business retail CD account")
-    public void iHaveRetailCDAccount() {
-        print("User has an active small business retail CD account");
-    }
-    
-    @When("I fetch my latest transactions for my retail CD account")
-    public void iFetchRetailCDTransactions() {
-        response = given().when().get("/api/transactions/recent/retailcd");
-        print("User fetches recent transactions for retail CD account");
-    }
-    
-    @Then("I should be presented with my posted transactions for my retail CD account")
-    public void iSeeRetailCDTransactions() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        assertTrue(response.getBody().asString().contains("posted"));
-        print("Posted transactions for retail CD account displayed");
-    }
-    
-    @Given("my accountReferenceId does not match any existing small business accounts")
-    public void invalidAccountReferenceId() {
-        print("User has an invalid accountReferenceId");
-    }
-    
-    @When("I attempt to access my recent transactions with an invalid reference")
-    public void iAttemptInvalidTransactions() {
-        response = given().queryParam("accountReferenceId", "invalid123").when().get("/api/transactions/recent");
-        print("User attempts to access transactions with invalid reference");
-    }
-    
-    @Then("I should receive an error indicating no transactions are available")
-    public void iReceiveErrorForInvalidReference() {
-        assertNotNull(response);
-        assertEquals(404, response.getStatusCode());
-        print("Error received: No transactions available for invalid reference");
-    }
-}
-
-
-<!-- LoanAccountTransactions -->
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import static org.junit.Assert.*;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import static io.restassured.RestAssured.*;
-
-public class LoanAccountTransactions {
-    private Response response;
-    
-    @Given("I hold a small business retail ILA account")
-    public void iHoldRetailILAAccount() {
-        print("User has a small business retail ILA account");
-    }
-    
-    @When("I search for my recent loan account transactions")
-    public void iSearchLoanTransactions() {
-        response = given().when().get("/api/loantransactions/recent/ila");
-        print("User searches for recent loan transactions");
-    }
-    
-    @Then("I should be able to view my posted loan transactions")
-    public void iSeeLoanTransactions() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        assertTrue(response.getBody().asString().contains("posted"));
-        print("Posted loan transactions displayed");
-    }
-    
-    @Given("I hold a small business retail LOC account")
-    public void iHoldRetailLOCAccount() {
-        print("User has a small business retail LOC account");
-    }
-    
-    @When("I retrieve my recent loan account transactions")
-    public void iRetrieveLOCLoanTransactions() {
-        response = given().when().get("/api/loantransactions/recent/loc");
-        print("User retrieves recent LOC loan transactions");
-    }
-    
-    @Then("I should be able to see only the posted Loan transactions")
-    public void iSeeLOCLoanTransactions() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        assertTrue(response.getBody().asString().contains("posted"));
-        print("Posted loan transactions for LOC account displayed");
-    }
-}
-
-
-
-<!-- DepositAccountUpcomingTransactions -->
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import static org.junit.Assert.*;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import static io.restassured.RestAssured.*;
-
-public class DepositAccountUpcomingTransactions {
-    private Response response;
-    
-    @Given("I hold a small business retail deposit account")
-    public void iHoldRetailDepositAccount() {
-        print("User has a small business retail deposit account");
-    }
-    
-    @When("I retrieve my upcoming transactions")
-    public void iRetrieveUpcomingTransactions() {
-        response = given().when().get("/api/deposittransactions/upcoming/retail");
-        print("User retrieves upcoming retail deposit transactions");
-    }
-    
-    @Then("my scheduled transactions should be displayed")
-    public void iSeeScheduledTransactions() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        assertTrue(response.getBody().asString().contains("scheduled"));
-        print("Scheduled transactions displayed");
-    }
-    
-    @When("I request upcoming transactions")
-    public void iRequestUpcomingTransactions() {
-        response = given().when().get("/api/deposittransactions/upcoming/moneymarket");
-        print("User requests upcoming money market transactions");
-    }
-    
-    @Then("all scheduled transactions should be visible")
-    public void iSeeAllScheduledTransactions() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        assertTrue(response.getBody().asString().contains("scheduled"));
-        print("All scheduled transactions displayed");
-    }
-    
-    @Given("I manage a small business profile deposit account")
-    public void iManageProfileDepositAccount() {
-        print("User manages a small business profile deposit account");
-    }
-    
-    @When("I check for upcoming transactions")
-    public void iCheckUpcomingTransactions() {
-        response = given().when().get("/api/deposittransactions/upcoming/profile");
-        print("User checks for upcoming profile deposit transactions");
-    }
-    
-    @Then("I should successfully retrieve my scheduled transactions")
-    public void iRetrieveProfileScheduledTransactions() {
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
-        assertTrue(response.getBody().asString().contains("scheduled"));
-        print("Scheduled transactions for profile deposit displayed");
-    }
-    
-    @Given("I attempt to access a small business retail deposit account with a mismatched accountReferenceId")
-    public void iAttemptInvalidAccess() {
-        print("User attempts access with mismatched accountReferenceId");
-    }
-    
-    @When("I try to retrieve upcoming transactions")
-    public void iTryRetrieveUpcomingTransactions() {
-        response = given().when().get("/api/deposittransactions/upcoming/invalid");
-        print("User tries to retrieve upcoming transactions with an invalid reference");
-    }
-    
-    @Then("a 403 unauthorized error should be returned")
-    public void iReceiveUnauthorizedError() {
-        assertNotNull(response);
-        assertEquals(403, response.getStatusCode());
-        print("403 unauthorized error received");
-    }
-}
-
-
-
